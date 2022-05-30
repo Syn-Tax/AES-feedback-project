@@ -8,8 +8,6 @@ import numpy as np
 import os
 import sys
 import json
-from google.colab import drive
-drive.mount('/content/drive')
 
 logging.basicConfig(level=logging.INFO)
 transformers_logger = logging.getLogger("transformers")
