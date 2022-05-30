@@ -95,9 +95,9 @@ def run():
     for j in range(num_repeats):
         df = pd.read_csv("/content/AES-feedback-project/Experiment-1/data.csv")
         df = df.sample(frac=1).reset_index(drop=True)
-        result, wrong_predictions, model_outputs = train(model, model_saves[1], 50, df, j)
-        result["model"] = model
-        result["sample size"] = sample
+        result, wrong_predictions, model_outputs = train(model_types[0], model_saves[1], 50, df, j)
+        result["model"] = model_types[0]
+        result["sample size"] = 50
         results.append(results)
         torch.cuda.empty_cache()
         clear_output()
