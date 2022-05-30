@@ -26,7 +26,7 @@ eval_size = 50
 
 def train(model_type, model_save, sample_size, df, repeat):
     wandb_config = {
-        "epochs": 50,
+        "epochs": 1,
         "train_batch_size": 8,
         "eval_batch_size": 4,
         "lr": 5e-5,
@@ -96,6 +96,7 @@ def run():
         df = pd.read_csv("/content/AES-feedback-project/Experiment-1/data.csv")
         df = df.sample(frac=1).reset_index(drop=True)
         result, wrong_predictions, model_outputs = train(model_types[0], model_saves[0], 50, df, j)
+        print(wrong_predictions)
         result["model"] = model_types[0]
         result["sample size"] = 50
         results.append(results)
