@@ -21,7 +21,7 @@ model_saves = ["bert-base-cased"]
 # model_saves = ["allenai/longformer-base-4096"]
 # sample_sizes = [10, 20, 30, 40, 50]
 sample_sizes = [50]
-num_repeats = 5
+num_repeats = 1
 eval_size = 50
 
 def train(model_type, model_save, sample_size, df, repeat):
@@ -107,7 +107,7 @@ def run():
 
         errors = [[pred.text_a, float(pred.label), float(model_outputs[i])] for i, pred in enumerate(list(wrong_predictions))]
         errors_df = pd.DataFrame(errors).sort_values(1, ascending=False)
-        errors_df.to_csv(f"/content/drive/MyDrive/AES-feedback-project/Experiment-1/results/{model_types[0]}-{sample}-{j}.csv")
+        errors_df.to_csv(f"/content/drive/MyDrive/AES-feedback-project/Experiment-1/results/{model_types[0]}-{j}.csv")
 
     return results
 
