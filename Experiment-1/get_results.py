@@ -106,7 +106,7 @@ def run():
 
         errors = [[wrong_predictions[0][i], float(pred), float(model_outputs[i])] for i, pred in enumerate(wrong_predictions[1])]
         errors_df = pd.DataFrame(errors).sort_values(1, ascending=False)
-        errors_df.to_csv(f"/content/drive/MyDrive/AES-feedback/results/{model}-{sample}-{j}.csv")
+        errors_df.to_csv(f"/content/drive/MyDrive/AES-feedback-project/Experiment-1/results/{model}-{sample}-{j}.csv")
 
     return results
 
