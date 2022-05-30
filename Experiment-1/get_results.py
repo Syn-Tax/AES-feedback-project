@@ -111,9 +111,9 @@ def run():
 
     return results
 
-def save_results(results):
+def save_results(result_s):
     with open("/content/drive/MyDrive/transformer-aem/results.json", "w") as f:
-        f.write(json.dumps(results))
+        f.write(json.dumps(result_s))
 
 if __name__ == "__main__":
     results = run()
