@@ -97,13 +97,15 @@ def run():
         df = df.sample(frac=1).reset_index(drop=True)
         result, wrong_predictions, model_outputs = train(model_types[0], model_saves[0], 50, df, j)
         print(wrong_predictions)
+        print(model_outputs)
+        print(result)
         result["model"] = model_types[0]
         result["sample size"] = 50
         results.append(results)
         torch.cuda.empty_cache()
         clear_output()
 
-        errors = [[wrong_predictions[0][i], float(pred), float(model_outputs[i])] for i, pred in enumerate(list(wrong_predictions[1]))]
+        errors = [[wrong_predictions[i]["text_a"], float(pred), float(model_outputs[i])] for i, pred in enumerate(list(wrong_predictions[1]))]
         errors_df = pd.DataFrame(errors).sort_values(1, ascending=False)
         errors_df.to_csv(f"/content/drive/MyDrive/AES-feedback-project/Experiment-1/results/{model}-{sample}-{j}.csv")
 
