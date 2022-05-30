@@ -1,0 +1,6 @@
+* AES Feedback Project
+
+These experiments are designed to determine the effectiveness of various AES techniques in Chemistry along with attempting to give feedback on short-medium length questions.
+
+** Experiment 1
+This experiment focuses on the difference in the marking between 3 different pre-trained transformer based models in the task of AES.
