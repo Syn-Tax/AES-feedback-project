@@ -93,7 +93,7 @@ def train(model_type, model_save, sample_size, df, repeat):
 def run():
     results = []
     for j in range(num_repeats):
-        df = pd.read_csv("data.csv")
+        df = pd.read_csv("/content/AES-feedback-project/Experiment-1/data.csv")
         df = df.sample(frac=1).reset_index(drop=True)
         result, wrong_predictions, model_outputs = train(model, model_saves[1], 50, df, j)
         result["model"] = model
