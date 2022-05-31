@@ -115,7 +115,7 @@ def train():
     train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, batch_size=wandb_config["train_batch_size"])
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=wandb_config["eval_batch_size"])
 
-    optimizer = torch.AdamW(model.parameters(), lr=wandb_config["lr"])
+    optimizer = torch.optim.AdamW(model.parameters(), lr=wandb_config["lr"])
 
     num_training_steps = len(train_dataloader)*wandb_config["epochs"]
     learning_rate_scheduler = transformers.get_scheduler(
