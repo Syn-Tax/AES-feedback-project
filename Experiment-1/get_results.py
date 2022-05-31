@@ -69,10 +69,11 @@ def process_data(train_df, eval_df):
     train_texts = train_df["text"]
     train_labels = train_df["labels"]
 
-    print(train_labels)
 
     eval_texts = eval_df["text"]
     eval_labels = eval_df["labels"]
+
+    print(eval_labels)
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(wandb_config["save"])
 
