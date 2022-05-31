@@ -49,7 +49,7 @@ def train(model_type, model_save, sample_size, df, repeat):
     model_args.num_train_epochs = wandb_config["epochs"]
     model_args.eval_batch_size = wandb_config["eval_batch_size"]
     model_args.train_batch_size = wandb_config["train_batch_size"]
-    model_args.wandb_project = "transformer-aes"
+    model_args.wandb_project = "AES-feedback-project"
     model_args.wandb_kwargs = {"name": "{}-{}-{}".format(wandb_config["model"], wandb_config["samples"], repeat+1) }
     model_args.learning_rate = wandb_config["lr"]
     model_args.model = wandb_config["model"]
