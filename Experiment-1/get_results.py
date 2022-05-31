@@ -37,7 +37,7 @@ class Report_Dataset(torch.utils.data.Dataset):
         return item
 
     def __len__(self):
-        return len(sef.labes)
+        return len(self.lables)
 
 
 def load_data(train_size=50, eval_size=50):
