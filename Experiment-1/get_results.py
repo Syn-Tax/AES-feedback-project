@@ -156,7 +156,7 @@ def train():
 
             logits = outputs.logits
 
-            print(list(logits))
+            print([float(logit) for logit in logits])
 
 
 if __name__ == "__main__":
