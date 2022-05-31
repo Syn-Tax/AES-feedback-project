@@ -131,9 +131,9 @@ def train():
 
 
     for epoch in range(wandb_config["epochs"]):
+        print(f"Epoch number {epoch}")
         model.train()
         progress_bar = tqdm.auto.tqdm(range(num_training_steps))
-        print(f"Epoch number {epoch}")
         for batch in train_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(**batch)
@@ -146,9 +146,9 @@ def train():
             progress_bar.update(1)
 
         # Eval at the end of every epoch
+        print(f"Evaluating after epoch {epoch}")
         model.eval()
         progress_bar = tqdm.auto.tqdm(range(num_training_steps))
-        print(f"Evaluating after epoch {epoch}")
         for batch in eval_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
             with torch.no_grad():
@@ -156,7 +156,7 @@ def train():
 
             logits = outputs.logits
 
-            print(logits)
+            print(list(logits))
 
 
 if __name__ == "__main__":
