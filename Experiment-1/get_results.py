@@ -11,9 +11,7 @@ import os
 import tqdm
 
 wandb.login()
-
-os.environ["WANDB_ENTITY"] = "syntax483"
-os.environ["WANDB_PROJECT"] = "AES-Experiment-1"
+wandb.init(project="AES-Experiment-1")
 
 wandb_config = {
     "epochs": 1,
@@ -124,8 +122,6 @@ def train():
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model.to(device)
 
-
-
     for epoch in range(wandb_config["epochs"]):
         print(f"Epoch number {epoch}")
         model.train()
@@ -133,16 +129,20 @@ def train():
         for batch in train_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(**batch)
+            print(outputs)
             loss = outputs.loss
             loss.backward()
+
+            # wandb.log({"train_loss": loss})
 
             optimizer.step()
             lr_scheduler.step()
             optimizer.zero_grad()
             progress_bar.update(1)
+            break
 
         # Eval at the end of every epoch
-        print(f"Evaluating after epoch {epoch}")
+        print(f"\nEvaluating after epoch {epoch}")
         model.eval()
         progress_bar = tqdm.auto.tqdm(range(len(eval_dataloader)))
         output_logits = []
@@ -160,7 +160,7 @@ def train():
             progress_bar.update(1)
 
         metrics = compute_metrics(output_logits, output_labels)
-        print(metrics)
+        print("\n" + metrics)
 
 
 if __name__ == "__main__":
