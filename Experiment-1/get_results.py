@@ -26,6 +26,20 @@ wandb_config = {
     "save": "bert-base-cased"
 }
 
+class Report_Dataset(torch.utils.data.Dataset):
+    def __init__(self, encodings, labels):
+        self.encodings = encodings
+        self.labels = labels
+
+    def __getitem__(self, idx):
+        item = {key: torch.tensor(val[idx]) for key, val in self.encodings.items()}
+        item['labels'] = torch.tensor(self.labels[idx])
+        return item
+
+    def __len__(self):
+        return len(sef.labes)
+
+
 def load_data(train_size=50, eval_size=50):
     df = pd.read_csv("/content/AES-feedback-project/Experiment-1/data.csv")
     df = df.sample(frac=1).reset_index(drop=True)
@@ -51,8 +65,22 @@ def configure_model(config):
         save_strategy="no"
     )
 
-def tokenize(example, tokenizer):
-    return tokenizer(example["text"], padding="max_length", truncation=True)
+def process_data(train_df, eval_df):
+    train_texts = train_df["text"]
+    train_labels = train_df["labels"]
+
+    eval_texts = eval_df["text"]
+    eval_labels = eval_df["labels"]
+
+    tokenizer = transformers.AutoTokenizer.from_pretrained(wandb_config["save"])
+
+    train_texts_encodings = tokenizer(train_texts, padding=True, trunctaion=True)
+    eval_texts_encodings = tokenizer(eval_texts, padding=True, truncation=True)
+
+    train_dataset = Report_Dataset(train_texts_encodings, train_labels)
+    eval_dataset = Report_Dataset(eval_texts_encodings, eval_labels)
+
+    return train_dataset, eval_dataset
 
 def train():
     tokenizer = transformers.AutoTokenizer.from_pretrained(wandb_config["save"])
@@ -65,14 +93,13 @@ def train():
 
     model = transformers.AutoModelForSequenceClassification.from_pretrained(wandb_config["save"], num_labels=1)
 
-    train_dataloader = torch.utils.data.DataLoader(train_tokenized, batch_size=wandb_config["train_batch_size"])
-    eval_dataloader = torch.utils.data.DataLoader(eval_tokenized, batch_size=wandb_config["eval_batch_size"])
+    train_dataset, eval_dataset = process_data(train_df, eval_df)
 
     trainer = transformers.Trainer(
         model=model,
         args=training_args,
-        train_dataset=train_dataloader,
-        eval_dataset=eval_dataloader
+        train_dataset=train_dataset,
+        eval_dataset=eval_dataset
     )
 
     trainer.train()
