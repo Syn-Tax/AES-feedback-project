@@ -124,10 +124,10 @@ def train():
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model.to(device)
 
+    progress_bar = tqdm.auto.tqdm(range(wandb_config["epochs"]))
+
     for epoch in range(wandb_config["epochs"]):
-        print(f"Epoch number {epoch}")
         model.train()
-        progress_bar = tqdm.auto.tqdm(range(num_training_steps))
         for batch in train_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(**batch)
@@ -139,12 +139,9 @@ def train():
             optimizer.step()
             lr_scheduler.step()
             optimizer.zero_grad()
-            progress_bar.update(1)
 
         # Eval at the end of every epoch
-        print(f"\nEvaluating after epoch {epoch}")
         model.eval()
-        progress_bar = tqdm.auto.tqdm(range(len(eval_dataloader)))
         output_logits = []
         output_labels = []
         for batch in eval_dataloader:
@@ -157,7 +154,7 @@ def train():
 
             [output_labels.append(float(label)) for label in batch["labels"]]
 
-            progress_bar.update(1)
+        progress_bar.update(1)
 
         metrics = compute_metrics(output_logits, output_labels)
         wandb.log(metrics)
