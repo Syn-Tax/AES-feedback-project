@@ -3,6 +3,7 @@
 import pandas as pd
 import sklearn
 from sklearn import metrics
+import math
 import numpy as np
 import torch
 import transformers
@@ -14,7 +15,7 @@ wandb.login()
 wandb.init(project="AES-Experiment-1")
 
 wandb_config = {
-    "epochs": 100,
+    "epochs": 30,
     "train_batch_size": 8,
     "eval_batch_size": 4,
     "lr": 1e-4,
@@ -41,6 +42,21 @@ class Report_Dataset(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.labels)
 
+def mae_loss(output, target):
+    mae = torch.mean(torch.abs(output - target))
+    return mae
+
+def mse_loss(output, target):
+    mse = torch.mean((output - target)**2)
+    return mse
+
+def max_loss(output, target):
+    max_error = torch.max(torch.abs(output - target))
+    return max_error
+
+def rmse_loss(output, target):
+    rmse = torch.sqrt(mse_loss(output, target))
+    return rmse
 
 def load_data(train_size=50, eval_size=50):
     df = pd.read_csv("/content/AES-feedback-project/Experiment-1/data.csv")
@@ -90,11 +106,13 @@ def compute_metrics(model_outputs, correct):
     mse = metrics.mean_squared_error(correct, model_outputs)
     mae = metrics.mean_absolute_error(correct, model_outputs)
     r2 = metrics.r2_score(correct, model_outputs)
+    rmse = math.sqrt(mse)
 
     return {
         "eval_max": max_error,
         "eval_mse": mse,
         "eval_mae": mae,
+        "eval_rmse": rmse,
         "eval_r2": r2
     }
 
@@ -131,7 +149,8 @@ def train():
         for batch in train_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(**batch)
-            loss = torch.nn.MSELoss()(outputs.logits, batch["labels"])
+            # loss = torch.nn.MSELoss()(outputs.logits, batch["labels"])
+            loss = train_mae(outputs.logits, batch["labels"])
             loss.backward()
 
             wandb.log({"train_loss": loss})
