@@ -74,7 +74,7 @@ def process_data(train_df, eval_df):
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(wandb_config["save"])
 
-    train_texts_encodings = tokenizer(list(train_texts), padding=True, trunctaion=True)
+    train_texts_encodings = tokenizer(list(train_texts), padding=True, truncation=True)
     eval_texts_encodings = tokenizer(list(eval_texts), padding=True, truncation=True)
 
     train_dataset = Report_Dataset(train_texts_encodings, train_labels)
