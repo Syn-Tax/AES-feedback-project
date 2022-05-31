@@ -7,7 +7,7 @@ import torch
 import transformers
 import wandb
 import os
-import tdqm
+import tqdm
 
 wandb.login()
 
@@ -128,7 +128,7 @@ def train():
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model.to(device)
 
-    progress_bar = tdqm.auto.tdqm(range(num_training_steps))
+    progress_bar = tqdm.auto.tqdm(range(num_training_steps))
 
     model.train()
 
