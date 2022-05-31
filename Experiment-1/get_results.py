@@ -49,7 +49,7 @@ def load_data(train_size=50, eval_size=50):
 
     eval_df = df.iloc[df.shape[0] - eval_size:]
     eval_df.columns = ["text", "labels"]
-    eval_df.reset_index()
+    eval_df = eval_df.reset_index()
 
     return train_df, eval_df
 
