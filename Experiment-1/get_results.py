@@ -150,7 +150,7 @@ def train():
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(**batch)
             # loss = torch.nn.MSELoss()(outputs.logits, batch["labels"])
-            loss = mae_loss(outputs.logits, batch["labels"])
+            loss = mse_loss(outputs.logits, batch["labels"])
             loss.backward()
 
             wandb.log({"train_loss": loss})
