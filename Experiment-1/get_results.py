@@ -18,13 +18,15 @@ wandb_config = {
     "epochs": 30,
     "train_batch_size": 8,
     "eval_batch_size": 4,
-    "lr": 1e-4,
+    "lr": 5e-5,
     "adam_beta_1": 0.9,
     "adam_beta_2": 0.999,
     "adam_epsilon": 1e-8,
     "lr_scheduler": "linear",
     "model": "bert",
-    "save": "bert-base-cased"
+    "save": "bert-base-cased",
+    "train_size": 75,
+    "eval_size": 25
 }
 
 wandb.config = wandb_config
@@ -119,8 +121,7 @@ def compute_metrics(model_outputs, correct):
 def train():
     tokenizer = transformers.AutoTokenizer.from_pretrained(wandb_config["save"])
 
-    train_df, eval_df = load_data()
-
+    train_df, eval_df = load_data(wandb_config["train_size"], wandb_config["eval_size"])
 
     model = transformers.AutoModelForSequenceClassification.from_pretrained(wandb_config["save"], num_labels=1)
 
