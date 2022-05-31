@@ -86,8 +86,6 @@ def train():
     tokenizer = transformers.AutoTokenizer.from_pretrained(wandb_config["save"])
 
     train_df, eval_df = load_data()
-    train_tokenized = tokenize(train_df, tokenizer)
-    eval_tokenized = tokenize(eval_df, tokenizer)
 
     training_args = configure_model(wandb_config)
 
