@@ -86,8 +86,20 @@ def process_data(train_df, eval_df):
 def compute_metrics(eval_pred):
     logits, labels = eval_pred
 
-    print([logit[0] for logit in logits])
-    print(labels)
+    model_outputs = [logit[0] for logit in logits]
+    correct = list(labels)
+
+    max_error = sklearn.metrics.max_error(correct, model_outputs)
+    mse = sklearn.metrics.mean_squared_error(correct, model_outputs)
+    mae = sklearn.metrics.mean_absolute_error(correct, model_outputs)
+    r2 = sklearn.metrics.r2_score(correct, model_outputs)
+
+    return {
+        "max": max_error,
+        "mse": mse,
+        "mae": mae,
+        "r2": r2
+    }
 
 def train():
     tokenizer = transformers.AutoTokenizer.from_pretrained(wandb_config["save"])
