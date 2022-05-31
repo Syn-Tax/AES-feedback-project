@@ -2,6 +2,7 @@
 
 import pandas as pd
 import sklearn
+from sklearn import metrics
 import numpy as np
 import torch
 import transformers
@@ -85,10 +86,10 @@ def process_data(train_df, eval_df):
     return train_dataset, eval_dataset
 
 def compute_metrics(model_outputs, correct):
-    max_error = sklearn.metrics.max_error(correct, model_outputs)
-    mse = sklearn.metrics.mean_squared_error(correct, model_outputs)
-    mae = sklearn.metrics.mean_absolute_error(correct, model_outputs)
-    r2 = sklearn.metrics.r2_score(correct, model_outputs)
+    max_error = metrics.max_error(correct, model_outputs)
+    mse = metrics.mean_squared_error(correct, model_outputs)
+    mae = metrics.mean_absolute_error(correct, model_outputs)
+    r2 = metrics.r2_score(correct, model_outputs)
 
     return {
         "max": max_error,
