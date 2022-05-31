@@ -155,7 +155,7 @@ def train():
             with torch.no_grad():
                 outputs = model(**batch)
 
-            logits = [float(logit) for logit in output.logits]
+            logits = [float(logit) for logit in outputs.logits]
             ouput_logits.append(*logits)
             print(batch)
 
