@@ -25,8 +25,8 @@ wandb_config = {
     "lr_scheduler": "linear",
     "model": "bert",
     "save": "bert-base-cased",
-    "train_size": 75,
-    "eval_size": 25
+    "train_size": 100,
+    "eval_size": 100
 }
 
 wandb.config = wandb_config
@@ -151,7 +151,7 @@ def train():
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(**batch)
             # loss = torch.nn.MSELoss()(outputs.logits, batch["labels"])
-            loss = max_loss(outputs.logits, batch["labels"])
+            loss = mse_loss(outputs.logits, batch["labels"])
             loss.backward()
 
             wandb.log({"train_loss": loss})
