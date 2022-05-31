@@ -118,7 +118,7 @@ def train():
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb_config["lr"])
 
     num_training_steps = len(train_dataloader)*wandb_config["epochs"]
-    learning_rate_scheduler = transformers.get_scheduler(
+    lr_scheduler = transformers.get_scheduler(
         name="linear",
         optimizer=optimizer,
         num_warmup_steps=0,
