@@ -14,7 +14,7 @@ wandb.login()
 wandb.init(project="AES-Experiment-1")
 
 wandb_config = {
-    "epochs": 1,
+    "epochs": 100,
     "train_batch_size": 8,
     "eval_batch_size": 4,
     "lr": 1e-4,
