@@ -156,7 +156,7 @@ def train():
                 outputs = model(**batch)
 
             logits = [float(logit) for logit in outputs.logits]
-            ouput_logits.append(*logits)
+            output_logits.append(*logits)
             print(batch)
 
             progress_bar.update(1)
