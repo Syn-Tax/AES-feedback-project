@@ -130,7 +130,7 @@ def train():
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(**batch)
             print(outputs.logits.shape)
-            print(outputs.batch["labels"].shape)
+            print(batch["labels"].shape)
             loss = torch.nn.MSELoss()(outputs.logits, batch["labels"])
             loss.backward()
 
