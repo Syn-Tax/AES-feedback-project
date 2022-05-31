@@ -84,7 +84,10 @@ def process_data(train_df, eval_df):
     return train_dataset, eval_dataset
 
 def compute_metrics(eval_pred):
-    print(eval_pred)
+    logits, labels = eval_pred
+
+    print(logits)
+    print(labels)
 
 def train():
     tokenizer = transformers.AutoTokenizer.from_pretrained(wandb_config["save"])
