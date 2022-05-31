@@ -92,10 +92,10 @@ def compute_metrics(model_outputs, correct):
     r2 = metrics.r2_score(correct, model_outputs)
 
     return {
-        "max": max_error,
-        "mse": mse,
-        "mae": mae,
-        "r2": r2
+        "eval_max": max_error,
+        "eval_mse": mse,
+        "eval_mae": mae,
+        "eval_r2": r2
     }
 
 def train():
@@ -160,8 +160,7 @@ def train():
             progress_bar.update(1)
 
         metrics = compute_metrics(output_logits, output_labels)
-        print()
-        print(metrics)
+        wandb.log(metrics)
 
 
     # Eval at the end of every epoch
