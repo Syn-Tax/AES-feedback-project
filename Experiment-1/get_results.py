@@ -150,6 +150,7 @@ def train():
         model.eval()
         progress_bar = tqdm.auto.tqdm(range(len(eval_dataloader)))
         output_logits = []
+        output_labels = []
         for batch in eval_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
             with torch.no_grad():
@@ -157,7 +158,8 @@ def train():
 
             logits = [float(logit) for logit in outputs.logits]
             [output_logits.append(logit) for logit in logits]
-            print(batch)
+
+            [output_labels.append(float(label)) for label in batch["labels"]]
 
             progress_bar.update(1)
 
