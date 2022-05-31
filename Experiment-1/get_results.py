@@ -86,7 +86,7 @@ def process_data(train_df, eval_df):
 def compute_metrics(eval_pred):
     logits, labels = eval_pred
 
-    print(logits[0])
+    print([logit[0] for logit in logits])
     print(labels)
 
 def train():
