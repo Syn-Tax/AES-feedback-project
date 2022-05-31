@@ -70,11 +70,8 @@ def process_data(train_df, eval_df):
     train_texts = train_df["text"]
     train_labels = train_df["labels"]
 
-
     eval_texts = eval_df["text"]
     eval_labels = eval_df["labels"]
-
-    print(eval_labels)
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(wandb_config["save"])
 
@@ -85,6 +82,9 @@ def process_data(train_df, eval_df):
     eval_dataset = Report_Dataset(eval_texts_encodings, eval_labels)
 
     return train_dataset, eval_dataset
+
+def compute_metrics(eval_pred):
+    print(eval_pred)
 
 def train():
     tokenizer = transformers.AutoTokenizer.from_pretrained(wandb_config["save"])
@@ -101,7 +101,8 @@ def train():
         model=model,
         args=training_args,
         train_dataset=train_dataset,
-        eval_dataset=eval_dataset
+        eval_dataset=eval_dataset,
+        compute_metrics=compute_metrics
     )
 
     trainer.train()
