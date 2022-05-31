@@ -109,13 +109,15 @@ def compute_metrics(model_outputs, correct):
     mae = metrics.mean_absolute_error(correct, model_outputs)
     r2 = metrics.r2_score(correct, model_outputs)
     rmse = math.sqrt(mse)
+    stddev = np.std(model_outputs)
 
     return {
         "eval_max": max_error,
         "eval_mse": mse,
         "eval_mae": mae,
         "eval_rmse": rmse,
-        "eval_r2": r2
+        "eval_r2": r2,
+        "eval_stddev": stddev
     }
 
 def train():
@@ -154,7 +156,7 @@ def train():
             loss = mse_loss(outputs.logits, batch["labels"])
             loss.backward()
 
-            wandb.log({"train_loss": loss})
+            # wandb.log({"train_loss": loss})
 
             optimizer.step()
             lr_scheduler.step()
