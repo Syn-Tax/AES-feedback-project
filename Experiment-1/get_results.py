@@ -129,18 +129,15 @@ def train():
         for batch in train_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(**batch)
-            print(outputs.logits.shape)
-            print(batch["labels"].shape)
             loss = torch.nn.MSELoss()(outputs.logits, torch.reshape(batch["labels"], (8,1)))
             loss.backward()
 
-            # wandb.log({"train_loss": loss})
+            wandb.log({"train_loss": loss})
 
             optimizer.step()
             lr_scheduler.step()
             optimizer.zero_grad()
             progress_bar.update(1)
-            break
 
         # Eval at the end of every epoch
         print(f"\nEvaluating after epoch {epoch}")
@@ -163,6 +160,32 @@ def train():
         metrics = compute_metrics(output_logits, output_labels)
         print()
         print(metrics)
+
+
+    # Eval at the end of every epoch
+    print(f"Final Evaluation")
+    model.eval()
+    progress_bar = tqdm.auto.tqdm(range(len(eval_dataloader)))
+    output_logits = []
+    output_labels = []
+    for batch in eval_dataloader:
+        batch = {k: v.to(device) for k, v in batch.items()}
+        with torch.no_grad():
+            outputs = model(**batch)
+
+        logits = [float(logit) for logit in outputs.logits]
+        [output_logits.append(logit) for logit in logits]
+
+        [output_labels.append(float(label)) for label in batch["labels"]]
+
+        progress_bar.update(1)
+
+    metrics = compute_metrics(output_logits, output_labels)
+    print()
+    print(metrics)
+
+    output_df = pd.DataFrame(list(zip(list(eval_df["text"]), output_logits, output_labels)))
+    print(output_df.head())
 
 
 if __name__ == "__main__":
