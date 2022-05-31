@@ -47,7 +47,7 @@ def load_data(train_size=50, eval_size=50):
     train_df = df.iloc[:train_size]
     train_df.columns = ["text", "labels"]
 
-    eval_df = df.iloc[eval_size:]
+    eval_df = df.iloc[df.shape[0] - eval_size:]
     eval_df.columns = ["text", "labels"]
 
     return train_df, eval_df
@@ -68,6 +68,8 @@ def configure_model(config):
 def process_data(train_df, eval_df):
     train_texts = train_df["text"]
     train_labels = train_df["labels"]
+
+    print(train_labels)
 
     eval_texts = eval_df["text"]
     eval_labels = eval_df["labels"]
