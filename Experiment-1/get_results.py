@@ -14,7 +14,7 @@ os.environ["WANDB_ENTITY"] = "syntax483"
 os.environ["WANDB_PROJECT"] = "AES-Experiment-1"
 
 wandb_config = {
-    "epochs": 100,
+    "epochs": 1,
     "train_batch_size": 8,
     "eval_batch_size": 4,
     "lr": 1e-4,
