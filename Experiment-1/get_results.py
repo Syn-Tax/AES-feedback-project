@@ -76,3 +76,6 @@ def train():
     )
 
     trainer.train()
+
+if __main__ == "__main__":
+    train()
