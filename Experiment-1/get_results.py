@@ -32,7 +32,7 @@ class Report_Dataset(torch.utils.data.Dataset):
         self.labels = labels
 
     def __getitem__(self, idx):
-        item = {key: torch.tensor(val[idx], dtype=torch.float32) for key, val in self.encodings.items()}
+        item = {key: torch.tensor(val[idx], dtype=torch.qfint32) for key, val in self.encodings.items()}
         item['labels'] = torch.tensor(self.labels[idx], dtype=torch.float32)
         return item
 
