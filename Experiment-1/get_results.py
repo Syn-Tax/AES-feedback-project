@@ -84,12 +84,7 @@ def process_data(train_df, eval_df):
 
     return train_dataset, eval_dataset
 
-def compute_metrics(eval_pred):
-    logits, labels = eval_pred
-
-    model_outputs = [logit[0] for logit in logits]
-    correct = list(labels)
-
+def compute_metrics(model_outputs, correct):
     max_error = sklearn.metrics.max_error(correct, model_outputs)
     mse = sklearn.metrics.mean_squared_error(correct, model_outputs)
     mae = sklearn.metrics.mean_absolute_error(correct, model_outputs)
@@ -163,7 +158,7 @@ def train():
 
             progress_bar.update(1)
 
-        metrics = calculate_metrics(output_logits)
+        metrics = compute_metrics(output_logits, output_labels)
 
 
 if __name__ == "__main__":
