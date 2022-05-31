@@ -7,6 +7,7 @@ import torch
 import transformers
 import wandb
 import os
+import tdqm
 
 wandb.login()
 
@@ -106,21 +107,42 @@ def train():
 
     train_df, eval_df = load_data()
 
-    training_args = configure_model(wandb_config)
 
     model = transformers.AutoModelForSequenceClassification.from_pretrained(wandb_config["save"], num_labels=1)
 
     train_dataset, eval_dataset = process_data(train_df, eval_df)
 
-    trainer = transformers.Trainer(
-        model=model,
-        args=training_args,
-        train_dataset=train_dataset,
-        eval_dataset=eval_dataset,
-        compute_metrics=compute_metrics
+    train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, batch_size=wandb_config["train_batch_size"])
+    eval_dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=wandb_config["eval_batch_size"])
+
+    optimizer = torch.AdamW(model.parameters(), lr=wandb_config["lr"])
+
+    num_training_steps = len(train_dataloader)*wandb_config["epochs"]
+    learning_rate_scheduler = transformers.get_scheduler(
+        name="linear",
+        optimizer=optimizer,
+        num_warmup_steps=0,
+        num_training_steps=num_training_steps
     )
 
-    trainer.train()
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    model.to(device)
+
+    progress_bar = tdqm.auto.tdqm(range(num_training_steps))
+
+    model.train()
+
+    for epoch in range(wandb_config["epochs"]):
+        for batch in train_dataloader:
+            batch = {k: v.to(device) for k, v in batch.items()}
+            outputs = model(**batch)
+            loss = outputs.loss
+            loss.backward()
+
+            optimizer.step()
+            lr_scheduler.step()
+            optimizer.zero_grad()
+            progress_bar.update(1)
 
 if __name__ == "__main__":
     train()
