@@ -139,7 +139,7 @@ def train():
         output_labels = []
         for batch in eval_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
-            print(len(batch))
+            print(len(batch["labels"]))
 
             with torch.no_grad():
                 outputs = model(batch["input_ids"])
