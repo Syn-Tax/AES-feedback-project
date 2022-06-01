@@ -17,7 +17,7 @@ wandb.init(project="AES-Experiment-2")
 
 wandb.config = {
     "batch_size": 64,
-    "epochs": 5,
+    "epochs": 1,
     "lr": 5e-5
 }
 
@@ -110,7 +110,7 @@ def train():
     train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, batch_size=wandb.config["batch_size"])
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=wandb.config["batch_size"])
 
-    model = SelfAttention(wandb.config["batch_size"], 1, 256, tokenizer.vocab_size, 64)
+    model = SelfAttention(wandb.config["batch_size"], 1, 256, tokenizer.vocab_size, 21)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
 
