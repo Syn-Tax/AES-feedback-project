@@ -108,7 +108,7 @@ def train():
     eval_dataset = process_data(eval_df, tokenizer)
 
     train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=True, batch_size=wandb.config["batch_size"])
-    eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True batch_size=wandb.config["batch_size"])
+    eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
 
     model = SelfAttention(wandb.config["batch_size"], 1, 256, tokenizer.vocab_size, 64)
 
