@@ -109,7 +109,9 @@ def train():
         for batch in train_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(batch["input_ids"])
-            print(outputs)
+
+            loss = mse_loss(list(outputs), batch["labels"])
+            print(loss)
             break
         break
 
