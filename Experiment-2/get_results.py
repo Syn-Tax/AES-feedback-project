@@ -16,7 +16,7 @@ from model import SelfAttention
 wandb.init(project="AES-Experiment-2")
 
 wandb.config = {
-    "batch_size": 64,
+    "batch_size": 21,
     "epochs": 1,
     "lr": 5e-5
 }
@@ -125,7 +125,7 @@ def train():
         model.train()
         for batch in train_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
-            outputs = model(batch["input_ids"], batch_size=wandb.config["batch_size"])
+            outputs = model(batch["input_ids"])
 
             loss = mse_loss(outputs, batch["labels"])
             loss.backward()
@@ -140,7 +140,7 @@ def train():
             batch = {k: v.to(device) for k, v in batch.items()}
 
             with torch.no_grad():
-                outputs = model(batch["input_ids"], batch_size=wandb.config["batch_size"])
+                outputs = model(batch["input_ids"])
 
             logits = [float(logit) for logit in outputs]
             [output_logits.append(logit) for logit in logits]
