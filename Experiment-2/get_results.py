@@ -16,8 +16,8 @@ from model import SelfAttention
 wandb.init(project="AES-Experiment-2")
 
 wandb.config = {
-    "batch_size": 64,
-    "epochs": 1,
+    "batch_size": 32,
+    "epochs": 10,
     "lr": 5e-5
 }
 
@@ -139,7 +139,6 @@ def train():
         output_labels = []
         for batch in eval_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
-            print(len(batch["labels"]))
 
             with torch.no_grad():
                 outputs = model(batch["input_ids"])
@@ -150,7 +149,6 @@ def train():
 
         metrics = compute_metrics(output_logits, output_labels)
         wandb.log(metrics)
-        print(metrics)
 
 
 if __name__ == "__main__":
