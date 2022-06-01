@@ -13,7 +13,7 @@ import os
 import tqdm
 from model import SelfAttention
 
-wandb.init()
+wandb.init(project="AES-Experiment-2")
 
 wandb.config = {
     "batch_size": 64,
@@ -82,6 +82,23 @@ def process_data(df, tokenizer):
 
     return dataset
 
+def compute_metrics(model_outputs, correct):
+    max_error = metrics.max_error(correct, model_outputs)
+    mse = metrics.mean_squared_error(correct, model_outputs)
+    mae = metrics.mean_absolute_error(correct, model_outputs)
+    r2 = metrics.r2_score(correct, model_outputs)
+    rmse = math.sqrt(mse)
+    stddev = np.std(model_outputs)
+
+    return {
+        "eval_max": max_error,
+        "eval_mse": mse,
+        "eval_mae": mae,
+        "eval_rmse": rmse,
+        "eval_r2": r2,
+        "eval_stddev": stddev
+    }
+
 def train():
     train_df, eval_df = load_data("/content/AES-feedback-project/Experiment-2/datasets/aes/data.csv")
 
@@ -111,9 +128,28 @@ def train():
             outputs = model(batch["input_ids"])
 
             loss = mse_loss(outputs, batch["labels"])
-            print(loss)
-            break
-        break
+            loss.backward()
+
+            optimizer.step()
+            optimizer.zero_grad()
+
+        model.eval()
+        output_logits = []
+        output_labels = []
+        for batch in eval_dataloader:
+            batch = {k: v.to(device) for k, v in batch.items()}
+
+            with torch.no_grad():
+                outputs = model(batch["input_ids"])
+
+            logits = [float(logit) for logit in outputs]
+            [output_logits.append(logit) for logit in logits]
+            [output_labels.append(float(label)) for label in batch["labels"]]
+
+        metrics = compute_metrics(output_logits, output_labels)
+        wandb.log(metrics)
+
+        progress_bar.update(1)
 
 if __name__ == "__main__":
     train()
