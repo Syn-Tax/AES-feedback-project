@@ -110,7 +110,7 @@ def train():
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(batch["input_ids"])
 
-            loss = mse_loss(list(outputs), batch["labels"])
+            loss = mse_loss(outputs, batch["labels"])
             print(loss)
             break
         break
