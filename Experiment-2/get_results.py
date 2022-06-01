@@ -16,7 +16,7 @@ from model import SelfAttention
 wandb.init(project="AES-Experiment-2")
 
 wandb.config = {
-    "batch_size": 21,
+    "batch_size": 64,
     "epochs": 1,
     "lr": 5e-5
 }
