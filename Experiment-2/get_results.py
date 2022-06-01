@@ -7,9 +7,19 @@ import math
 import numpy as np
 import torch
 import torchtext
+import transformers
 import wandb
 import os
 import tqdm
+from model import SelfAttention
+
+wandb.init()
+
+wandb.config = {
+    "batch_size": 64,
+    "epochs": 5,
+    "lr": 5e-5
+}
 
 
 class Dataset(torch.utils.data.Dataset):
@@ -18,7 +28,9 @@ class Dataset(torch.utils.data.Dataset):
         self.labels = labels
 
     def __getitem__(self, idx):
-        item = {"IDs": torch.tensor(self.encodings[idx], dtype=torch.long), "labels": torch.tensor(self.labels[idx], dtype=torch.float32)}
+        # item = {"IDs": torch.tensor(self.encodings[idx], dtype=torch.long), "labels": torch.tensor(self.labels[idx], dtype=torch.float32)}
+        item = {key: torch.tensor(val[idx], dtype=torch.long) for key, val in self.encodings.items()}
+        item['labels'] = torch.tensor(self.labels[idx], dtype=torch.float32)
         return item
 
     def __len__(self):
@@ -53,3 +65,53 @@ def load_data(path, eval_frac=0.1):
     eval_df = eval_df.reset_index(drop=True)
 
     return train_df, eval_df
+
+def process_data(df, tokenizer):
+    texts = df["text"]
+    labels = df["labels"]
+
+    # tokenizer = torch.load("data/tokenizer.pt")
+    # vocab = torch.load("data/vocab.pt")
+
+    # encodings = [vocab(tokenizer(x)) for x in texts]
+    #
+
+    encodings = tokenizer(list(texts), padding=True, truncation=True)
+
+    dataset = Dataset(encodings, labels)
+
+    return dataset
+
+def train():
+    train_df, eval_df = load_data("datasets/aes/data.csv")
+
+    tokenizer = transformers.BertTokenizerFast.from_pretrained("bert-base-cased")
+
+    train_dataset = process_data(train_df, tokenizer)
+    eval_dataset = process_data(eval_df, tokenizer)
+
+    train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, batch_size=wandb.config["batch_size"])
+    eval_dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=wandb.config["batch_size"])
+
+    model = SelfAttention(wandb.config["batch_size"], 1, 256, tokenizer.vocab_size, 64)
+
+    optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
+
+    num_training_steps = len(train_dataloader)*wandb.config["epochs"]
+
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    model.to(device)
+
+    progress_bar = tqdm.auto.tqdm(range(wandb.config["epochs"]))
+
+    for epoch in range(wandb.config["epochs"]):
+        model.train()
+        for batch in train_dataloader:
+            batch = {k: v.to(device) for k, v in batch.items()}
+            outputs = model(batch["input_ids"])
+            print(outputs)
+            break
+        break
+
+if __name__ == "__main__":
+    train()
