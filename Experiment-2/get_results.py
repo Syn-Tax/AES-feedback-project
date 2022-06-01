@@ -83,7 +83,7 @@ def process_data(df, tokenizer):
     return dataset
 
 def train():
-    train_df, eval_df = load_data("datasets/aes/data.csv")
+    train_df, eval_df = load_data("/content/AES-feedback-project/Experiment-2/datasets/aes/data.csv")
 
     tokenizer = transformers.BertTokenizerFast.from_pretrained("bert-base-cased")
 
