@@ -110,7 +110,7 @@ def train():
     train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, batch_size=wandb.config["batch_size"])
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=wandb.config["batch_size"])
 
-    model = SelfAttention(wandb.config["batch_size"], 1, 256, tokenizer.vocab_size, 21)
+    model = SelfAttention(wandb.config["batch_size"], 1, 256, tokenizer.vocab_size, 64)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
 
@@ -125,7 +125,7 @@ def train():
         model.train()
         for batch in train_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
-            outputs = model(batch["input_ids"])
+            outputs = model(batch["input_ids"], batch_size=wandb.config["batch_size"])
 
             loss = mse_loss(outputs, batch["labels"])
             loss.backward()
@@ -140,7 +140,7 @@ def train():
             batch = {k: v.to(device) for k, v in batch.items()}
 
             with torch.no_grad():
-                outputs = model(batch["input_ids"])
+                outputs = model(batch["input_ids"], batch_size=wandb.config["batch_size"])
 
             logits = [float(logit) for logit in outputs]
             [output_logits.append(logit) for logit in logits]
@@ -148,6 +148,7 @@ def train():
 
         metrics = compute_metrics(output_logits, output_labels)
         wandb.log(metrics)
+        print(metrics)
 
         progress_bar.update(1)
 
