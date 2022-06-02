@@ -72,11 +72,13 @@ def train(model_type, model_save, sample_size, df, repeat):
 
     model.train_model(
         train_df,
-        eval_df=eval_df
+        eval_df=eval_df,
+        acc=sklearn.metrics.accuracy_score
     )
 
     result, model_outputs, wrong_predictions = model.eval_model(
-        eval_df
+        eval_df,
+        acc=sklearn.metrics.accuracy_score
     )
 
     return result, wrong_predictions, model_outputs
