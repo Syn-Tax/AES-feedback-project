@@ -18,7 +18,7 @@ name = "fine-tune"
 wandb.init(project="AES-Experiment-3", name=name)
 
 wandb.config = {
-    "batch_size": 32,
+    "batch_size": 8,
     "epochs": 20,
     "lr": 5e-5,
     "hidden_size": 256,
@@ -81,7 +81,7 @@ def process_data(df, tokenizer):
     # encodings = [vocab(tokenizer(x)) for x in texts]
     #
 
-    encodings = tokenizer(list(texts), padding=True, truncation=True)
+    encodings = tokenizer(list(texts), padding=True, truncation=True, max_length=512)
 
     dataset = Dataset(encodings, labels)
 
