@@ -107,7 +107,7 @@ def compute_metrics(model_outputs, correct):
 def train():
     train_df, eval_df = load_data(f"datasets/{name}/data.csv")
 
-    tokenizer = transformers.BertTokenizerFast.from_pretrained("bert-base-cased")
+    tokenizer = transformers.AutoTokenizer.from_pretrained("prajjwal1/bert-mini")
 
     train_dataset = process_data(train_df, tokenizer)
     eval_dataset = process_data(eval_df, tokenizer)
@@ -116,7 +116,7 @@ def train():
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
 
     #model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
-    model = transformers.BertForSequenceClassification.from_pretrained("bert-base-cased", num_labels=1)
+    model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-mini", num_labels=1)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
 
