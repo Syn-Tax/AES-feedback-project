@@ -1,0 +1,24 @@
+{
+    "os": "Linux-4.19.0-19-cloud-amd64-x86_64-with-debian-10.12",
+    "python": "3.7.12",
+    "heartbeatAt": "2022-06-02T11:41:19.165062",
+    "startedAt": "2022-06-02T11:41:17.741172",
+    "docker": null,
+    "gpu": "Tesla T4",
+    "gpu_count": 1,
+    "cpu_count": 4,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "fine-tune.py",
+    "codePath": "Experiment-3/fine-tune.py",
+    "git": {
+        "remote": "git@github.com:Syn-Tax/AES-feedback-project.git",
+        "commit": "4924a26a59aefefe3b614432c84e3ea7bb21f802"
+    },
+    "email": null,
+    "root": "/home/twocap06/AES-feedback-project",
+    "host": "deeplearning-1-vm",
+    "username": "twocap06",
+    "executable": "/opt/conda/bin/python3"
+}
