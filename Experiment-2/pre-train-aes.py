@@ -126,6 +126,7 @@ def train():
 
 
     for epoch in range(wandb.config["epochs"]):
+        print(f"############## EPOCH: {epoch} ################")
         model.train()
         progress_bar = tqdm.auto.tqdm(range(len(train_dataloader)))
         for batch in train_dataloader:
@@ -134,6 +135,8 @@ def train():
 
             loss = mse_loss(outputs, batch["labels"])
             loss.backward()
+
+            wandb.log({"train_loss": loss})
 
             optimizer.step()
             optimizer.zero_grad()
