@@ -135,7 +135,7 @@ def train():
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(batch["input_ids"])
 
-            loss = mse_loss(outputs.logits, batch["labels"])
+            loss = mse_loss(outputs, batch["labels"])
             loss.backward()
 
             wandb.log({"train_loss": loss})
@@ -154,7 +154,7 @@ def train():
             with torch.no_grad():
                 outputs = model(batch["input_ids"])
 
-            logits = [float(logit) for logit in outputs.logits]
+            logits = [float(logit) for logit in outputs]
             [output_logits.append(logit) for logit in logits]
             [output_labels.append(float(label)) for label in batch["labels"]]
 
@@ -176,7 +176,7 @@ def train():
         with torch.no_grad():
             outputs = model(batch["input_ids"])
 
-        logits = [float(logit) for logit in outputs.logits]
+        logits = [float(logit) for logit in outputs]
         [output_logits.append(logit) for logit in logits]
         [output_labels.append(float(label)) for label in batch["labels"]]
 
