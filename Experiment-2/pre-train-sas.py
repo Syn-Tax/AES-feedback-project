@@ -162,7 +162,7 @@ def train():
         print(metrics)
         wandb.log(metrics)
 
-    torch.save(model, f"models/model-{name}.pt")
+    torch.save(model, f"model/model-{name}-pretrained.pt")
 
 
 if __name__ == "__main__":
