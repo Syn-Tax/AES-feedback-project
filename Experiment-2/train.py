@@ -13,14 +13,17 @@ import os
 import tqdm
 from model import SelfAttention
 
-wandb.init(project="AES-Experiment-2")
+name = sys.argv[1]
+
+wandb.init(project="AES-Experiment-2", name=name)
 
 wandb.config = {
     "batch_size": 32,
     "epochs": 100,
     "lr": 1e-4,
     "hidden_size": 1024,
-    "embedding_length": 300
+    "embedding_length": 300,
+    "name": name
 }
 
 
@@ -102,7 +105,7 @@ def compute_metrics(model_outputs, correct):
     }
 
 def train():
-    train_df, eval_df = load_data("/content/AES-feedback-project/Experiment-2/datasets/aes/data.csv")
+    train_df, eval_df = load_data(f"/content/AES-feedback-project/Experiment-2/datasets/{name}/data.csv")
 
     tokenizer = transformers.BertTokenizerFast.from_pretrained("bert-base-cased")
 
@@ -152,7 +155,7 @@ def train():
         metrics = compute_metrics(output_logits, output_labels)
         wandb.log(metrics)
 
-    torch.save(model, "/content/drive/AES-feedback-project/Experiment-2/Models/model-aes.pt")
+    torch.save(model, f"/content/drive/AES-feedback-project/Experiment-2/Models/model-{name}.pt")
 
 
 if __name__ == "__main__":
