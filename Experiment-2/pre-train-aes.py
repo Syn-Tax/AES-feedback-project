@@ -19,7 +19,7 @@ wandb.init(project="AES-Experiment-2", name=name)
 
 wandb.config = {
     "batch_size": 64,
-    "epochs": 100,
+    "epochs": 20,
     "lr": 1e-4,
     "hidden_size": 256,
     "embedding_length": 300,
@@ -118,6 +118,7 @@ def train():
     model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
+    lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
 
     num_training_steps = len(train_dataloader)*wandb.config["epochs"]
 
@@ -140,6 +141,7 @@ def train():
 
             optimizer.step()
             optimizer.zero_grad()
+            lr_scheduler.step()
             progress_bar.update(1)
 
         model.eval()
