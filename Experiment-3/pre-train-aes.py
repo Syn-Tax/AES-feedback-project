@@ -60,6 +60,8 @@ def rmse_loss(output, target):
 def load_data(path, eval_frac=0.1):
     df = pd.read_csv(path)
 
+    df = df.sample(frac=1).reset_index(drop=True)
+
     train_df = df.iloc[int(df.shape[0]*eval_frac):]
     train_df.columns = ["text", "labels"]
 
