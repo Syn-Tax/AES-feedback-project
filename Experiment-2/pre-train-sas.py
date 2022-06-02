@@ -116,7 +116,7 @@ def train():
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
 
     # model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
-    model = torch.load("models/model-aes.pt")
+    model = torch.load("model/model-aes.pt")
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
 
