@@ -18,10 +18,10 @@ name = "sas"
 wandb.init(project="AES-Experiment-2", name=name)
 
 wandb.config = {
-    "batch_size": 32,
-    "epochs": 100,
+    "batch_size": 64,
+    "epochs": 20,
     "lr": 1e-4,
-    "hidden_size": 1024,
+    "hidden_size": 256,
     "embedding_length": 300,
     "name": name
 }
