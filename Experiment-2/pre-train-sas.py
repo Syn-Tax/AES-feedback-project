@@ -115,8 +115,8 @@ def train():
     train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=True, batch_size=wandb.config["batch_size"])
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
 
-    # model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
-    model = torch.load("model/model-aes.pt")
+    model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
+    # model = torch.load("model/model-aes.pt")
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
     lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
@@ -162,7 +162,7 @@ def train():
         print(metrics)
         wandb.log(metrics)
 
-    torch.save(model, f"model/model-{name}-pretrained.pt")
+    torch.save(model, f"model/model-{name}.pt")
 
 
 if __name__ == "__main__":
