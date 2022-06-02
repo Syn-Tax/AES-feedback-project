@@ -138,6 +138,8 @@ def train():
             loss = mse_loss(outputs, batch["labels"])
             loss.backward()
 
+            wandb.log({"train_loss": loss})
+
             optimizer.step()
             optimizer.zero_grad()
             lr_scheduler.step()
