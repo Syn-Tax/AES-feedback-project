@@ -187,7 +187,7 @@ def train():
     output_df = pd.DataFrame(list(zip(list(eval_df["text"]), output_logits, output_labels)))
     output_df.columns = ["text", "prediction", "true"]
 
-    output_df.to_csv(f"results-aes.csv", index=False)
+    output_df.to_csv(f"results-aes-bert.csv", index=False)
 
 
 if __name__ == "__main__":

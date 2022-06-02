@@ -1,0 +1,104 @@
+import pandas as pd
+from simpletransformers.classification import ClassificationArgs, ClassificationModel
+from IPython.display import clear_output
+import torch
+import logging
+import sklearn
+import numpy as np
+import os
+import sys
+import json
+
+logging.basicConfig(level=logging.INFO)
+transformers_logger = logging.getLogger("transformers")
+transformers_logger.setLevel(logging.WARNING)
+
+# model_types = ["bert", "albert", "xlmroberta", "longformer"]
+model_types = ["bert"]
+# model_saves = ["roberta-base", "bert-base-cased", "albert-base-v2", "xlm-roberta-base", "allenai/longformer-base-4096"]
+model_saves = ["bert-base-cased"]
+# model_types = ["longformer"]
+# model_saves = ["allenai/longformer-base-4096"]
+# sample_sizes = [10, 20, 30, 40, 50]
+sample_sizes = [50]
+num_repeats = 1
+eval_size = 50
+
+def train(model_type, model_save, sample_size, df, repeat):
+    wandb_config = {
+        "epochs": 20,
+        "train_batch_size": 32,
+        "eval_batch_size": 16,
+        "lr": 5e-5,
+        "samples": sample_size,
+        "max_seq_len": 512,
+        "model": model_type,
+        "save": model_save
+    }
+
+
+    train_df = df.iloc[:wandb_config["samples"], :]
+
+    train_df.columns = ["text", "labels"]
+
+    eval_df = df.iloc[50:50+eval_size, :]
+
+    eval_df.columns = ["text", "labels"]
+
+    model_args = ClassificationArgs()
+    model_args.num_train_epochs = wandb_config["epochs"]
+    model_args.eval_batch_size = wandb_config["eval_batch_size"]
+    model_args.train_batch_size = wandb_config["train_batch_size"]
+    model_args.wandb_project = "AES-Experiment-1"
+    model_args.wandb_kwargs = {"name": "{}-{}-{}".format(wandb_config["model"], wandb_config["samples"], repeat+1) }
+    model_args.learning_rate = wandb_config["lr"]
+    model_args.model = wandb_config["model"]
+    model_args.samples = wandb_config["samples"]
+    model_args.max_seq_length = wandb_config["max_seq_len"]
+    model_args.no_save = True
+    model_args.overwrite_output_dir = True
+    model_args.logging_steps = np.ceil((wandb_config["samples"]/wandb_config["train_batch_size"]))
+    model_args.evaluate_during_training = True
+    # model_args.evaluate_during_training_verbose = True
+    model_args.evaluate_during_training_steps = np.ceil((wandb_config["samples"]/wandb_config["train_batch_size"])*10)
+    model_args.use_eval_cached_features = True
+
+    model = ClassificationModel(
+        wandb_config["model"],
+        wandb_config["save"],
+        num_labels=6,
+        args=model_args
+    )
+
+    model.train_model(
+        train_df,
+        eval_df=eval_df
+    )
+
+    result, model_outputs, wrong_predictions = model.eval_model(
+        eval_df
+    )
+
+    return result, wrong_predictions, model_outputs
+
+def run():
+    results = []
+    for j in range(num_repeats):
+        df = pd.read_csv("datasets/aes/data.csv")
+        df = df.sample(frac=1).reset_index(drop=True)
+        result, wrong_predictions, model_outputs = train(model_types[0], model_saves[0], 50, df, j)
+        result["model"] = model_types[0]
+        result["sample size"] = 50
+        results.append(results)
+        torch.cuda.empty_cache()
+        clear_output()
+
+        errors = [[pred.text_a, float(pred.label), float(model_outputs[i])] for i, pred in enumerate(list(wrong_predictions))]
+        # errors_df = pd.DataFrame(errors).sort_values(1, ascending=False)
+        errors_df = pd.DataFrame(errors)
+        errors_df.to_csv(f"results.csv")
+
+    return results
+
+if __name__ == "__main__":
+    results = run()
