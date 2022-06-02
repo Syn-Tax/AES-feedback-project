@@ -121,7 +121,7 @@ def train():
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
 
     num_training_steps = len(train_dataloader)*wandb.config["epochs"]
-    lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer, num_training_steps=num_training_steps)
+    lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
 
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model.to(device)
