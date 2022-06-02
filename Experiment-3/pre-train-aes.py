@@ -11,7 +11,7 @@ import transformers
 import wandb
 import os
 import tqdm
-#from model import SelfAttention
+from model import SelfAttention
 
 name = "aes"
 
