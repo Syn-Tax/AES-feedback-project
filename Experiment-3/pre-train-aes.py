@@ -18,7 +18,7 @@ name = "aes"
 wandb.init(project="AES-Experiment-3", name=name)
 
 wandb.config = {
-    "batch_size": 32,
+    "batch_size": 16,
     "epochs": 5,
     "lr": 5e-5,
     "hidden_size": 256,
