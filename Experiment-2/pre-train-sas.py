@@ -119,6 +119,7 @@ def train():
     model = torch.load("model/model-aes.pt")
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
+    lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
 
     num_training_steps = len(train_dataloader)*wandb.config["epochs"]
 
@@ -127,6 +128,7 @@ def train():
 
 
     for epoch in range(wandb.config["epochs"]):
+        print(f"############## EPOCH: {epoch} ###############")
         model.train()
         progress_bar = tqdm.auto.tqdm(range(len(train_dataloader)))
         for batch in train_dataloader:
@@ -138,6 +140,7 @@ def train():
 
             optimizer.step()
             optimizer.zero_grad()
+            lr_scheduler.step()
             progress_bar.update(1)
 
         model.eval()
@@ -154,6 +157,7 @@ def train():
             [output_labels.append(float(label)) for label in batch["labels"]]
 
         metrics = compute_metrics(output_logits, output_labels)
+        print(metrics)
         wandb.log(metrics)
 
     torch.save(model, f"models/model-{name}.pt")
