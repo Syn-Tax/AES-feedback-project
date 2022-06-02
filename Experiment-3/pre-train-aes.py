@@ -116,12 +116,12 @@ def train():
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
 
     #model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
-    model = transformers.BertModel.from_pretrained("bert-base-cased", num_labels=1)
+    model = transformers.BertForSequenceClassification.from_pretrained("bert-base-cased", num_labels=1)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
-    lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
 
     num_training_steps = len(train_dataloader)*wandb.config["epochs"]
+    lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer, num_training_steps=num_training_steps)
 
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model.to(device)
