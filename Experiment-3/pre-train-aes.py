@@ -115,8 +115,8 @@ def train():
     train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=True, batch_size=wandb.config["batch_size"])
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
 
-    #model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
-    model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-mini", num_labels=1)
+    model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
+    #model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-mini", num_labels=1)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
 
@@ -133,7 +133,7 @@ def train():
         progress_bar = tqdm.auto.tqdm(range(len(train_dataloader)))
         for batch in train_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
-            outputs = model(**batch)
+            outputs = model(batch["input_ids"])
 
             loss = mse_loss(outputs.logits, batch["labels"])
             loss.backward()
@@ -187,7 +187,7 @@ def train():
     output_df = pd.DataFrame(list(zip(list(eval_df["text"]), output_logits, output_labels)))
     output_df.columns = ["text", "prediction", "true"]
 
-    output_df.to_csv(f"results-aes-bert.csv", index=False)
+    output_df.to_csv(f"results-aes-self_attention.csv", index=False)
 
 
 if __name__ == "__main__":

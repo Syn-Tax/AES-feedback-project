@@ -9,7 +9,7 @@ import os
 import sys
 import json
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARN)
 transformers_logger = logging.getLogger("transformers")
 transformers_logger.setLevel(logging.WARNING)
 
