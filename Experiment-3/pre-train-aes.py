@@ -81,7 +81,7 @@ def process_data(df, tokenizer):
     # encodings = [vocab(tokenizer(x)) for x in texts]
     #
 
-    encodings = tokenizer(list(texts), padding=True, truncation=True)
+    encodings = tokenizer(list(texts), padding=True, truncation=True, max_len=512)
 
     dataset = Dataset(encodings, labels)
 
