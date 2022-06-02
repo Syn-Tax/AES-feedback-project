@@ -57,7 +57,7 @@ def rmse_loss(output, target):
     rmse = torch.sqrt(mse_loss(output, target))
     return rmse
 
-def load_data(path, eval_frac=0.1):
+def load_data(path, eval_frac=0.4):
     df = pd.read_csv(path)
 
     train_df = df.iloc[int(df.shape[0]*eval_frac):]
