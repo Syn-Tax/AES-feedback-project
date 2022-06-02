@@ -156,6 +156,7 @@ def train():
             [output_labels.append(float(label)) for label in batch["labels"]]
 
         metrics = compute_metrics(output_logits, output_labels)
+        print(metrics)
         wandb.log(metrics)
 
     torch.save(model, f"model/model-{name}.pt")
