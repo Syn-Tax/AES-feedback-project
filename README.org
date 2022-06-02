@@ -4,3 +4,6 @@ These experiments are designed to determine the effectiveness of various AES tec
 
 ** Experiment 1
 This experiment focuses on the difference in the marking between 3 different pre-trained transformer based models in the task of AES.
+
+** Experiment 2
+This experiment is to create a much smaller encoder + classification head model and pre-train on AES and SAS datasets to determine its effectiveness at being trained on much smaller models.
