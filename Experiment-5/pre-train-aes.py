@@ -53,6 +53,12 @@ def r2_loss(output, target):
     r2 = 1 - ss_res / ss_tot
     return -r2
 
+def stdev_error(output, target, unbiased=False):
+    target_std = torch.std(target, unbiased=unbiased)
+    output_std = torch.std(output, unbiased=unbiased)
+
+    return torch.abs(target_std - output_std)
+
 def load_data(path, eval_frac=0.1):
     df = pd.read_csv(path)
 
@@ -136,7 +142,10 @@ def train(technique=None):
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(batch["input_ids"])
 
-            loss = mse_loss(outputs, batch["labels"])
+            mse = mse_loss(outputs, batch["labels"])
+            stddev = stdev_error(outputs, batch["labels"])
+
+            loss = mse + (0.1*stdev)
             loss.backward()
 
             wandb.log({"train_loss": loss})
@@ -193,11 +202,11 @@ def train(technique=None):
 
 if __name__ == "__main__":
     config = {
-        "batch_size": 32,
+        "batch_size": 16,
         "epochs": 20,
         "lr":1e-3,
-        "hidden_size": 64,
-        "embedding_length": 128,
+        "hidden_size": 16,
+        "embedding_length": 32,
         "name": name
     }
 
