@@ -140,7 +140,8 @@ def train(technique=None):
         progress_bar = tqdm.auto.tqdm(range(len(train_dataloader)))
         for batch in train_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
-            outputs = model(batch["input_ids"])
+            output = model(batch["input_ids"])
+            outputs = output.logits
 
             mse = mse_loss(outputs, batch["labels"])
             stdev = stdev_error(outputs, batch["labels"])
