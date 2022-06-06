@@ -15,7 +15,6 @@ from model import SelfAttention
 
 name = "aes"
 
-wandb.init(project="AES-Experiment-3", name=name)
 
 wandb.config = {
     "batch_size": 32,
@@ -106,8 +105,11 @@ def compute_metrics(model_outputs, correct):
         "eval_stddev": stddev
     }
 
-def train():
-    train_df, eval_df = load_data(f"datasets/{name}/data.csv")
+def train(technique=None):
+    if technique:
+        train_df, eval_df = load_data(f"datasets/{name}/data_{technique}.csv")
+    else:
+        train_df, eval_df = load_data(f"datasets/{name}/data.csv")
 
     tokenizer = transformers.AutoTokenizer.from_pretrained("prajjwal1/bert-mini")
 
@@ -193,4 +195,13 @@ def train():
 
 
 if __name__ == "__main__":
-    train()
+    try:
+        technique = sys.argv[1]
+        wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}")
+        train(technique=technique)
+    except:
+        techniques = ["Zscore", "min_max", "median_MAD", "tanh"]
+        for technique in techniques:
+            run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}", reinit=True)
+            train(technique=technique)
+            run.finish()
