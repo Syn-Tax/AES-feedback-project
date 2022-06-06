@@ -35,8 +35,9 @@ class SelfAttention(nn.Module):
 		# We will use da = 350, r = 30 & penalization_coeff = 1 as per given in the self-attention original ICLR paper
 		self.W_s1 = nn.Linear(2*hidden_size, 350)
 		self.W_s2 = nn.Linear(350, 30)
-		self.fc_layer = nn.Linear(30*2*hidden_size, 2000)
-		self.label = nn.Linear(2000, output_size)
+		#self.fc_layer = nn.Linear(30*2*hidden_size, 2000)
+		#self.label = nn.Linear(2000, output_size)
+		self.label = nn.Linear(30*2*hidden_size, output_size)
 
 	def attention_net(self, lstm_output):
 
@@ -95,8 +96,9 @@ class SelfAttention(nn.Module):
 		hidden_matrix = torch.bmm(attn_weight_matrix, output)
 		# hidden_matrix.size() = (batch_size, r, 2*hidden_size)
 		# Let's now concatenate the hidden_matrix and connect it to the fully connected layer.
-		fc_out = self.fc_layer(hidden_matrix.view(-1, hidden_matrix.size()[1]*hidden_matrix.size()[2]))
-		logits = self.label(fc_out)
+		#fc_out = self.fc_layer(hidden_matrix.view(-1, hidden_matrix.size()[1]*hidden_matrix.size()[2]))
+		#logits = nn.sigmoid(self.label(fc_out))
+		logits = nn.sigmoid(self.label(hidden_matrix.view(-1, hidden_matrix.size()[1]*hidden_matrix.size()[2])))
 		# logits.size() = (batch_size, output_size)
 
 		return logits

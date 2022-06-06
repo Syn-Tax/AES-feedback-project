@@ -136,7 +136,7 @@ def train(technique=None):
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(batch["input_ids"])
 
-            loss = r2_loss(outputs, batch["labels"])
+            loss = mse_loss(outputs, batch["labels"])
             loss.backward()
 
             wandb.log({"train_loss": loss})
@@ -196,19 +196,19 @@ if __name__ == "__main__":
         "batch_size": 32,
         "epochs": 20,
         "lr": 5e-5,
-        "hidden_size": 256,
-        "embedding_length": 300,
+        "hidden_size": 64,
+        "embedding_length": 128,
         "name": name
     }
 
     try:
         technique = sys.argv[1]
-        run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-r2", config=config)
+        run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-small", config=config)
         train(technique=technique)
         run.finish()
     except:
         techniques = ["Zscore", "min_max", "median_MAD", "tanh"]
         for technique in techniques:
-            run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-r2", reinit=True, config=config)
+            run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-small", reinit=True, config=config)
             train(technique=technique)
             run.finish()
