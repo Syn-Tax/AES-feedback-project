@@ -203,12 +203,12 @@ if __name__ == "__main__":
 
     try:
         technique = sys.argv[1]
-        run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-small", config=config)
+        run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-small-prompt3", config=config)
         train(technique=technique)
         run.finish()
     except:
         techniques = ["Zscore", "min_max", "median_MAD", "tanh"]
         for technique in techniques:
-            run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-small", reinit=True, config=config)
+            run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-small-prompt3", reinit=True, config=config)
             train(technique=technique)
             run.finish()

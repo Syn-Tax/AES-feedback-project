@@ -98,7 +98,7 @@ class SelfAttention(nn.Module):
 		# Let's now concatenate the hidden_matrix and connect it to the fully connected layer.
 		#fc_out = self.fc_layer(hidden_matrix.view(-1, hidden_matrix.size()[1]*hidden_matrix.size()[2]))
 		#logits = nn.sigmoid(self.label(fc_out))
-		logits = F.sigmoid(self.label(hidden_matrix.view(-1, hidden_matrix.size()[1]*hidden_matrix.size()[2])))
+		logits = torch.sigmoid(self.label(hidden_matrix.view(-1, hidden_matrix.size()[1]*hidden_matrix.size()[2])))
 		# logits.size() = (batch_size, output_size)
 
 		return logits
