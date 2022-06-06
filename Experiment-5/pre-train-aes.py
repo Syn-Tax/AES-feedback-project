@@ -122,8 +122,8 @@ def train(technique=None):
     train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=True, batch_size=wandb.config["batch_size"])
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
 
-    model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
-    #model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-mini", num_labels=1)
+    #model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
+    model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-mini", num_labels=1)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
 
@@ -145,7 +145,7 @@ def train(technique=None):
             mse = mse_loss(outputs, batch["labels"])
             stdev = stdev_error(outputs, batch["labels"])
 
-            loss = mse + (0.01*stdev)
+            loss = mse + ((wandb.config["epochs"]/epoch)*stdev)
             loss.backward()
 
             wandb.log({"train_loss": loss})
@@ -202,12 +202,13 @@ def train(technique=None):
 
 if __name__ == "__main__":
     config = {
-        "batch_size": 32,
-        "epochs": 200,
+        "batch_size": 64,
+        "epochs": 500,
         "lr":1e-3,
         "hidden_size": 32,
         "embedding_length": 64,
-        "name": name
+        "name": name,
+        "stdev_coeff": 0.1
     }
 
     try:
