@@ -198,8 +198,9 @@ def train(technique=None):
 if __name__ == "__main__":
     try:
         technique = sys.argv[1]
-        wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}")
+        run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}")
         train(technique=technique)
+        run.finish()
     except:
         techniques = ["Zscore", "min_max", "median_MAD", "tanh"]
         for technique in techniques:
