@@ -58,14 +58,14 @@ def AES_dataset(technique):
 
     #max_grades = [6, 3, 3, 4, 4, 15]
     #valid_prompts = [1, 3, 4, 5, 6, 7]
-    valid_prompts = [2]
-    max_grades = [5]
+    valid_prompts = [3]
+    max_grades = [3]
     aes_df = aes_df[aes_df["essay_set"].isin(valid_prompts) == True]
 
     aes_list = [aes_df[aes_df["essay_set"].isin([x]) == True] for x in valid_prompts]
 
     for i, df in enumerate(aes_list):
-        df.loc[:, score_column] = df.loc[:, score_column].apply(lambda x: x-1)
+        #df.loc[:, score_column] = df.loc[:, score_column].apply(lambda x: x-1)
         maximum = max_grades[i]
         mean = df[score_column].mean()
         stdev = df[score_column].std()
@@ -94,7 +94,7 @@ def AES_dataset(technique):
     print(aes_df.shape[0])
 
 
-    aes_df.to_csv(f"datasets/aes/data_prompt_2_{technique}.csv", index=False, encoding="utf-8")
+    aes_df.to_csv(f"datasets/aes/data_prompt_3_{technique}.csv", index=False, encoding="utf-8")
 
 if __name__ == "__main__":
     try:
