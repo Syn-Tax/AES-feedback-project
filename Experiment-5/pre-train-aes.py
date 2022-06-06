@@ -17,14 +17,6 @@ from model import SelfAttention
 name = "aes"
 
 
-wandb.config = {
-    "batch_size": 32,
-    "epochs": 20,
-    "lr": 5e-5,
-    "hidden_size": 256,
-    "embedding_length": 300,
-    "name": name
-}
 
 
 class Dataset(torch.utils.data.Dataset):
@@ -196,14 +188,23 @@ def train(technique=None):
 
 
 if __name__ == "__main__":
+    config = {
+        "batch_size": 32,
+        "epochs": 20,
+        "lr": 5e-5,
+        "hidden_size": 256,
+        "embedding_length": 300,
+        "name": name
+    }
+
     try:
         technique = sys.argv[1]
-        run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}")
+        run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}", config=config)
         train(technique=technique)
         run.finish()
     except:
         techniques = ["Zscore", "min_max", "median_MAD", "tanh"]
         for technique in techniques:
-            run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}", reinit=True)
+            run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}", reinit=True, config=config)
             train(technique=technique)
             run.finish()
