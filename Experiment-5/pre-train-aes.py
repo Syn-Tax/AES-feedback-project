@@ -202,11 +202,11 @@ def train(technique=None):
 
 if __name__ == "__main__":
     config = {
-        "batch_size": 16,
+        "batch_size": 32,
         "epochs": 20,
         "lr":1e-3,
-        "hidden_size": 16,
-        "embedding_length": 32,
+        "hidden_size": 32,
+        "embedding_length": 64,
         "name": name
     }
 
