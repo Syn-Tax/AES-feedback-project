@@ -1,0 +1,24 @@
+{
+    "os": "Linux-4.19.0-19-cloud-amd64-x86_64-with-debian-10.12",
+    "python": "3.7.12",
+    "heartbeatAt": "2022-06-02T10:56:35.645438",
+    "startedAt": "2022-06-02T10:56:34.238569",
+    "docker": null,
+    "gpu": "Tesla T4",
+    "gpu_count": 1,
+    "cpu_count": 4,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "pre-train-aes.py",
+    "codePath": "Experiment-3/pre-train-aes.py",
+    "git": {
+        "remote": "git@github.com:Syn-Tax/AES-feedback-project.git",
+        "commit": "e62a7d4c67697e1c098c11999a8d3c88d9d767fe"
+    },
+    "email": null,
+    "root": "/home/twocap06/AES-feedback-project",
+    "host": "deeplearning-1-vm",
+    "username": "twocap06",
+    "executable": "/opt/conda/bin/python3"
+}
