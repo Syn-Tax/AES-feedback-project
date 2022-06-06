@@ -143,7 +143,7 @@ def train(technique=None):
             outputs = model(batch["input_ids"])
 
             mse = mse_loss(outputs, batch["labels"])
-            stddev = stdev_error(outputs, batch["labels"])
+            stdev = stdev_error(outputs, batch["labels"])
 
             loss = mse + (0.1*stdev)
             loss.backward()
