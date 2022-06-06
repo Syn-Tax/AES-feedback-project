@@ -68,6 +68,8 @@ def AES_dataset(technique):
         median = df["rater1_domain1"].median()
         mad = df["rater1_domain1"].mad()
 
+        print(mean, stdev)
+
         if technique == "Zscore":
             df.loc[:, "rater1_domain1"] = df.loc[:, "rater1_domain1"].apply(lambda x: Zscore(x, mean, stdev))
         elif technique == "min_max":
@@ -79,12 +81,15 @@ def AES_dataset(technique):
         else:
             raise ValueError("that is not a valid normalisation method")
 
+    aes_df = pd.concat(aes_list, ignore_index=True)
+
 
     aes_df = aes_df[["essay", "rater1_domain1"]]
 
     aes_df.columns = ["text", "labels"]
 
     print(aes_df.shape[0])
+
 
     aes_df.to_csv(f"datasets/aes/data_{technique}.csv", index=False, encoding="utf-8")
 
