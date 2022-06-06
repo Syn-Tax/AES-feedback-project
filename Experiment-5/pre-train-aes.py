@@ -16,9 +16,6 @@ from model import SelfAttention
 
 name = "aes"
 
-
-
-
 class Dataset(torch.utils.data.Dataset):
     def __init__(self, encodings, labels):
         self.encodings = encodings
@@ -48,6 +45,13 @@ def max_loss(output, target):
 def rmse_loss(output, target):
     rmse = torch.sqrt(mse_loss(output, target))
     return rmse
+
+def r2_loss(output, target):
+    target_mean = torch.mean(target)
+    ss_tot = torch.sum((target - target_mean) ** 2)
+    ss_res = torch.sum((target - output) ** 2)
+    r2 = 1 - ss_res / ss_tot
+    return -r2
 
 def load_data(path, eval_frac=0.1):
     df = pd.read_csv(path)
@@ -81,7 +85,7 @@ def process_data(df, tokenizer):
 
     return dataset
 
-def compute_metrics(model_outputs, correct):
+def compute_metrics(model_outputs, correct, technique):
     max_error = metrics.max_error(correct, model_outputs)
     mse = metrics.mean_squared_error(correct, model_outputs)
     mae = metrics.mean_absolute_error(correct, model_outputs)
@@ -132,7 +136,7 @@ def train(technique=None):
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(batch["input_ids"])
 
-            loss = mse_loss(outputs, batch["labels"])
+            loss = r2_loss(outputs, batch["labels"])
             loss.backward()
 
             wandb.log({"train_loss": loss})
@@ -199,12 +203,12 @@ if __name__ == "__main__":
 
     try:
         technique = sys.argv[1]
-        run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}", config=config)
+        run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-r2", config=config)
         train(technique=technique)
         run.finish()
     except:
         techniques = ["Zscore", "min_max", "median_MAD", "tanh"]
         for technique in techniques:
-            run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}", reinit=True, config=config)
+            run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-r2", reinit=True, config=config)
             train(technique=technique)
             run.finish()
