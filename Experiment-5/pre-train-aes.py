@@ -144,10 +144,11 @@ def train(technique=None):
             #outputs = output.logits
             outputs = output
 
-            mse = mse_loss(outputs, batch["labels"])
+            rmse = rmse_loss(outputs, batch["labels"])
             stdev = stdev_error(outputs, batch["labels"])
 
-            loss = mse + ((wandb.config["epochs"]/(epoch+1))*stdev)
+            #loss = mse + ((wandb.config["epochs"]/(epoch+1))*stdev)
+            loss = ((epoch/wandb.config["epochs"])*rmse) + stdev
             loss.backward()
 
             wandb.log({"train_loss": loss})
