@@ -122,8 +122,8 @@ def train(technique=None):
     train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=True, batch_size=wandb.config["batch_size"])
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
 
-    #model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
-    model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-mini", num_labels=1)
+    model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
+    #model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-mini", num_labels=1)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
 
@@ -141,7 +141,8 @@ def train(technique=None):
         for batch in train_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
             output = model(batch["input_ids"])
-            outputs = output.logits
+            #outputs = output.logits
+            outputs = output
 
             mse = mse_loss(outputs, batch["labels"])
             stdev = stdev_error(outputs, batch["labels"])
@@ -206,8 +207,8 @@ if __name__ == "__main__":
         "batch_size": 64,
         "epochs": 500,
         "lr":1e-3,
-        "hidden_size": 32,
-        "embedding_length": 64,
+        "hidden_size": 512,
+        "embedding_length": 300,
         "name": name,
         "stdev_coeff": 0.1
     }
