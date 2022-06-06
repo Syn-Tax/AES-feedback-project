@@ -104,7 +104,7 @@ def compute_metrics(model_outputs, correct):
 
 def train(technique=None):
     if technique:
-        train_df, eval_df = load_data(f"datasets/{name}/data_{technique}.csv")
+        train_df, eval_df = load_data(f"datasets/{name}/data_prompt_3_{technique}.csv")
     else:
         train_df, eval_df = load_data(f"datasets/{name}/data.csv")
 
