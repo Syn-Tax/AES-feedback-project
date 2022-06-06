@@ -85,7 +85,7 @@ def process_data(df, tokenizer):
 
     return dataset
 
-def compute_metrics(model_outputs, correct, technique):
+def compute_metrics(model_outputs, correct):
     max_error = metrics.max_error(correct, model_outputs)
     mse = metrics.mean_squared_error(correct, model_outputs)
     mae = metrics.mean_absolute_error(correct, model_outputs)
