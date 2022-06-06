@@ -54,44 +54,47 @@ def SAS_dataset(technique):
 
 def AES_dataset(technique):
     aes_df = pd.read_csv("datasets/aes/train.tsv", sep='\t', header=0, encoding="ISO-8859-1")
+    score_column = "domain1_score"
 
-    max_grades = [6, 3, 3, 4, 4, 15]
-    valid_prompts = [1, 3, 4, 5, 6, 7]
+    #max_grades = [6, 3, 3, 4, 4, 15]
+    #valid_prompts = [1, 3, 4, 5, 6, 7]
+    valid_prompts = [2]
+    max_grades = [5]
     aes_df = aes_df[aes_df["essay_set"].isin(valid_prompts) == True]
 
     aes_list = [aes_df[aes_df["essay_set"].isin([x]) == True] for x in valid_prompts]
 
     for i, df in enumerate(aes_list):
+        df.loc[:, score_column] = df.loc[:, score_column].apply(lambda x: x-1)
         maximum = max_grades[i]
-        mean = df["rater1_domain1"].mean()
-        stdev = df["rater1_domain1"].std()
-        median = df["rater1_domain1"].median()
-        mad = df["rater1_domain1"].mad()
+        mean = df[score_column].mean()
+        stdev = df[score_column].std()
+        median = df[score_column].median()
+        mad = df[score_column].mad()
 
         print(mean, stdev)
 
         if technique == "Zscore":
-            df.loc[:, "rater1_domain1"] = df.loc[:, "rater1_domain1"].apply(lambda x: Zscore(x, mean, stdev))
+            df.loc[:, score_column] = df.loc[:, score_column].apply(lambda x: Zscore(x, mean, stdev))
         elif technique == "min_max":
-            df.loc[:, "rater1_domain1"] = df.loc[:, "rater1_domain1"].apply(lambda x: min_max(x, maximum))
+            df.loc[:, score_column] = df.loc[:, score_column].apply(lambda x: min_max(x, maximum))
         elif technique == "median_MAD":
-            df.loc[:, "rater1_domain1"] = df.loc[:, "rater1_domain1"].apply(lambda x: median_MAD(x, median, mad))
+            df.loc[:, score_column] = df.loc[:, score_column].apply(lambda x: median_MAD(x, median, mad))
         elif technique == "tanh":
-            df.loc[:, "rater1_domain1"] = df.loc[:, "rater1_domain1"].apply(lambda x: tanh(x, mean, stdev))
+            df.loc[:, score_column] = df.loc[:, score_column].apply(lambda x: tanh(x, mean, stdev))
         else:
             raise ValueError("that is not a valid normalisation method")
 
     aes_df = pd.concat(aes_list, ignore_index=True)
 
-
-    aes_df = aes_df[["essay", "rater1_domain1"]]
+    aes_df = aes_df[["essay", score_column]]
 
     aes_df.columns = ["text", "labels"]
 
     print(aes_df.shape[0])
 
 
-    aes_df.to_csv(f"datasets/aes/data_{technique}.csv", index=False, encoding="utf-8")
+    aes_df.to_csv(f"datasets/aes/data_prompt_2_{technique}.csv", index=False, encoding="utf-8")
 
 if __name__ == "__main__":
     try:
