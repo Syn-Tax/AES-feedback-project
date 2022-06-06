@@ -195,7 +195,7 @@ if __name__ == "__main__":
     config = {
         "batch_size": 32,
         "epochs": 20,
-        "lr": 5e-5,
+        "lr":1e-3,
         "hidden_size": 64,
         "embedding_length": 128,
         "name": name
