@@ -145,7 +145,7 @@ def train(technique=None):
             mse = mse_loss(outputs, batch["labels"])
             stdev = stdev_error(outputs, batch["labels"])
 
-            loss = mse + (0.1*stdev)
+            loss = mse + (0.01*stdev)
             loss.backward()
 
             wandb.log({"train_loss": loss})
