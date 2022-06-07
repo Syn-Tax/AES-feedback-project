@@ -178,7 +178,7 @@ def train(technique=None):
 
 
             #loss = mse + ((wandb.config["epochs"]/(epoch+1))*stdev)
-            loss = ((1-stdev_factor)*(rmse+r2)) + (stdev_factor * stdev)
+            loss = ((1-stdev_factor)*(rmse+r2*0.001)) + (stdev_factor * stdev)
             loss.backward()
 
             wandb.log({"train_loss": loss, "train_stdev": stdev, "train_rmse": rmse, "train_r2": r2, "stdev_factor": stdev_factor})
