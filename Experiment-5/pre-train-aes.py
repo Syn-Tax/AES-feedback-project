@@ -265,7 +265,7 @@ if __name__ == "__main__":
         "stdev_coeff": 1.2,
         "stdev_start": 0.2,
         "stdev_start_coeff": 1,
-        "optimiser": "rmsprop"
+        "optimiser": "adamw"
     }
 
     try:
