@@ -142,8 +142,13 @@ def train(technique=None):
     #model = transformers.BertForSequenceClassification.from_pretrained("bert-base-uncased", config=bert_config)
 
     is_transformer = False
+    if wandb.config["optimiser"] == "adam":
+        optimizer = torch.optim.Adam(model.parameters(), lr=wandb.config["lr"])
+    elif wandb.config["optimiser"] == "adamw":
+        optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
+    elif wandb.config["optimiser"] == "rmsprop":
+        optimizer = torch.optim.RMSprop(model.parameters(), lr=wandb.config["lr"])
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
 
     num_training_steps = len(train_dataloader)*wandb.config["epochs"]
     lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
@@ -259,7 +264,8 @@ if __name__ == "__main__":
         "name": name,
         "stdev_coeff": 1,
         "stdev_start": 0.2,
-        "stdev_start_coeff": 1
+        "stdev_start_coeff": 1,
+        "optimiser": "adam"
     }
 
     try:
