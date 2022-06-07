@@ -116,7 +116,7 @@ def train(technique=None):
     else:
         train_df, eval_df = load_data(f"datasets/{name}/data.csv")
 
-    tokenizer = transformers.AutoTokenizer.from_pretrained("prajjwal1/bert-tiny")
+    tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
 
     train_dataset = process_data(train_df, tokenizer)
     eval_dataset = process_data(eval_df, tokenizer)
@@ -124,8 +124,21 @@ def train(technique=None):
     train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=True, batch_size=wandb.config["batch_size"])
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
 
-    model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
+    bert_config = transformers.BertConfig(
+        vocab_size=tokenizer.vocab_size,
+        hidden_size=wandb.config["hidden_size"],
+        num_hidden_layers=wandb.config["num_hidden_layers"],
+        num_attention_heads=wandb.config["num_attention_heads"],
+        intermediate_size=wandb.config["intermediate_size"],
+        hidden_act=wandb.config["hidden_act"],
+        hidden_dropout_prob=wandb.config["hidden_dropout_prob"],
+        attention_probs_dropout_prob=wandb.config["attention_probs_dropout_prob"],
+        classifier_dropout=wandb.config["classifier_dropout"]
+    )
+
+    #model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
     #model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-tiny", num_labels=1)
+    model = transformers.BertForSequenceClassification(config=config)
 
     is_transformer = False
 
@@ -233,8 +246,14 @@ if __name__ == "__main__":
         "batch_size": 16,
         "epochs": 50,
         "lr":1e-3,
-        "hidden_size": 256,
-        "embedding_length": 128,
+        "hidden_size": 128,
+        "num_hidden_layers": 8,
+        "num_attention_heads": 8,
+        "intermediate_size": 2048,
+        "hidden_act": "gelu",
+        "hidden_dropout_prob": 0.1,
+        "attention_probs_dropout_prob": 0.1,
+        "classification_dropout": None,
         "name": name,
         "stdev_coeff": 1,
         "stdev_start": 0.2,
