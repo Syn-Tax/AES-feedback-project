@@ -98,6 +98,7 @@ def compute_metrics(model_outputs, correct):
     r2 = metrics.r2_score(correct, model_outputs)
     rmse = math.sqrt(mse)
     stddev = np.std(model_outputs)
+    stdev_err = stdev_error(model_outputs, correct)
 
     return {
         "eval_max": max_error,
@@ -105,7 +106,8 @@ def compute_metrics(model_outputs, correct):
         "eval_mae": mae,
         "eval_rmse": rmse,
         "eval_r2": r2,
-        "eval_stddev": stddev
+        "eval_stdev": stddev,
+        "eval_stdev_error": stdev_err
     }
 
 def train(technique=None):
@@ -114,7 +116,7 @@ def train(technique=None):
     else:
         train_df, eval_df = load_data(f"datasets/{name}/data.csv")
 
-    tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
+    tokenizer = transformers.AutoTokenizer.from_pretrained("prajjwal1/bert-tiny")
 
     train_dataset = process_data(train_df, tokenizer)
     eval_dataset = process_data(eval_df, tokenizer)
@@ -123,7 +125,7 @@ def train(technique=None):
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
 
     # model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
-    model = transformers.AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=1)
+    model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-tiny", num_labels=1)
 
     is_transformer = True
 
