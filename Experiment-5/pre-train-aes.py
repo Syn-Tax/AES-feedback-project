@@ -260,7 +260,7 @@ if __name__ == "__main__":
         "name": name,
         "stdev_coeff": 1,
         "stdev_start": 0.2,
-        "stdev_start_coeff": 1,
+        "stdev_start_coeff": 0.95,
         "r2_coeff": 0.0005
     }
 
