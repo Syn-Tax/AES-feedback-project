@@ -231,8 +231,4 @@ if __name__ == "__main__":
         train(technique=technique)
         run.finish()
     except:
-        techniques = ["Zscore", "min_max", "median_MAD", "tanh"]
-        for technique in techniques:
-            run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-small-prompt3-msestd", reinit=True, config=config)
-            train(technique=technique)
-            run.finish()
+        raise Exception("Provide a valid normalisation technique")
