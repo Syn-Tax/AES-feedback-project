@@ -125,6 +125,8 @@ def train(technique=None):
     # model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
     model = transformers.AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=1)
 
+    is_transformer = True
+
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
 
     num_training_steps = len(train_dataloader)*wandb.config["epochs"]
@@ -141,8 +143,10 @@ def train(technique=None):
         for batch in train_dataloader:
             batch = {k: v.to(device) for k, v in batch.items()}
             output = model(batch["input_ids"])
-            outputs = output.logits
-            #outputs = output
+            if is_transformer:
+                outputs = output.logits
+            else:
+                outputs = output
 
             rmse = rmse_loss(outputs, batch["labels"])
             stdev = stdev_error(outputs, batch["labels"])
@@ -189,7 +193,12 @@ def train(technique=None):
         batch = {k: v.to(device) for k, v in batch.items()}
 
         with torch.no_grad():
-            outputs = model(batch["input_ids"])
+            output = model(batch["input_ids"])
+
+        if is_transformer:
+            outputs = output.logits
+        else:
+            outputs = output
 
         logits = [float(logit) for logit in outputs]
         [output_logits.append(logit) for logit in logits]
