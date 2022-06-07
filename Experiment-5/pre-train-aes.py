@@ -142,13 +142,8 @@ def train(technique=None):
     #model = transformers.BertForSequenceClassification.from_pretrained("bert-base-uncased", config=bert_config)
 
     is_transformer = False
-    if wandb.config["optimiser"] == "adam":
-        optimizer = torch.optim.Adam(model.parameters(), lr=wandb.config["lr"])
-    elif wandb.config["optimiser"] == "adamw":
-        optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
-    elif wandb.config["optimiser"] == "rmsprop":
-        optimizer = torch.optim.RMSprop(model.parameters(), lr=wandb.config["lr"])
 
+    optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
 
     num_training_steps = len(train_dataloader)*wandb.config["epochs"]
     lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
@@ -185,7 +180,7 @@ def train(technique=None):
             loss = ((1-stdev_factor)*rmse) + (stdev_factor * stdev)
             loss.backward()
 
-            wandb.log({"train_loss": loss, "train_stdev": stdev, "train_rmse": rmse, "stdev_factor": stdev_factor, "lr": lr_scheduler.get_last_lr()})
+            wandb.log({"train_loss": loss, "train_stdev": stdev, "train_rmse": rmse, "stdev_factor": stdev_factor})
 
             optimizer.step()
             optimizer.zero_grad()
@@ -250,8 +245,8 @@ def train(technique=None):
 if __name__ == "__main__":
     config = {
         "batch_size": 16,
-        "epochs": 200,
-        "lr":5e-3,
+        "epochs": 50,
+        "lr":1e-3,
         "hidden_size": 256,
         "embedding_length": 128,
         # "num_hidden_layers": 8,
@@ -262,10 +257,9 @@ if __name__ == "__main__":
         # "attention_probs_dropout_prob": 0.1,
         # "classifier_dropout": None,
         "name": name,
-        "stdev_coeff": 1.2,
+        "stdev_coeff": 1,
         "stdev_start": 0.2,
         "stdev_start_coeff": 1,
-        "optimiser": "adamw"
     }
 
     try:
