@@ -250,8 +250,8 @@ def train(technique=None):
 if __name__ == "__main__":
     config = {
         "batch_size": 16,
-        "epochs": 100,
-        "lr":1e-3,
+        "epochs": 200,
+        "lr":5e-3,
         "hidden_size": 256,
         "embedding_length": 128,
         # "num_hidden_layers": 8,
