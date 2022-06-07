@@ -246,7 +246,7 @@ if __name__ == "__main__":
     config = {
         "batch_size": 16,
         "epochs": 100,
-        "lr":2e-3,
+        "lr":1e-4,
         "hidden_size": 256,
         "embedding_length": 128,
         # "num_hidden_layers": 8,
