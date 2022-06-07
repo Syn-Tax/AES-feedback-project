@@ -236,7 +236,7 @@ if __name__ == "__main__":
         "hidden_size": 256,
         "embedding_length": 128,
         "name": name,
-        "stdev_coeff": 1.2,
+        "stdev_coeff": 1,
         "stdev_start": 0.2,
         "stdev_start_coeff": 1
     }
