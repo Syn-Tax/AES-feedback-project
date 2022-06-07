@@ -147,7 +147,7 @@ def train(technique=None):
             rmse = rmse_loss(outputs, batch["labels"])
             stdev = stdev_error(outputs, batch["labels"])
 
-            stdev_factor = wandb.config["stdev_coeff"]
+            stdev_factor = math.exp(-wandb.config["stdev_coeff"]*(epoch/wandb.config["epochs"]))
 
             #loss = mse + ((wandb.config["epochs"]/(epoch+1))*stdev)
             loss = ((1-stdev_factor)*rmse) + (stdev_factor * stdev)
