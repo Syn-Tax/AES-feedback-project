@@ -213,7 +213,7 @@ if __name__ == "__main__":
         "hidden_size": 512,
         "embedding_length": 300,
         "name": name,
-        "stdev_coeff": 0.5
+        "stdev_coeff": 0.2
     }
 
     try:
