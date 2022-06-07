@@ -98,7 +98,7 @@ def compute_metrics(model_outputs, correct):
     r2 = metrics.r2_score(correct, model_outputs)
     rmse = math.sqrt(mse)
     stddev = np.std(model_outputs)
-    stdev_err = stdev_error(model_outputs, correct)
+    stdev_err = abs(np.std(model_outputs)-np.std(correct))
 
     return {
         "eval_max": max_error,
