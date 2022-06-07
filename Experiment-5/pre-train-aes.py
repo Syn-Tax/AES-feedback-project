@@ -166,6 +166,7 @@ def train(technique=None):
 
             rmse = rmse_loss(outputs, batch["labels"])
             stdev = stdev_error(outputs, batch["labels"])
+            r2 = r2_loss(outputs, batch["labels"])
 
             curr_step = epoch * len(train_dataloader) + i
             curr_frac = curr_step / num_training_steps
@@ -177,10 +178,10 @@ def train(technique=None):
 
 
             #loss = mse + ((wandb.config["epochs"]/(epoch+1))*stdev)
-            loss = ((1-stdev_factor)*rmse) + (stdev_factor * stdev)
+            loss = ((1-stdev_factor)*(rmse-r2)) + (stdev_factor * stdev)
             loss.backward()
 
-            wandb.log({"train_loss": loss, "train_stdev": stdev, "train_rmse": rmse, "stdev_factor": stdev_factor})
+            wandb.log({"train_loss": loss, "train_stdev": stdev, "train_rmse": rmse, "train_r2": r2, "stdev_factor": stdev_factor})
 
             optimizer.step()
             optimizer.zero_grad()
