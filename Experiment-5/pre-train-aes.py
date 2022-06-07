@@ -245,7 +245,7 @@ def train(technique=None):
 if __name__ == "__main__":
     config = {
         "batch_size": 16,
-        "epochs": 100,
+        "epochs": 200,
         "lr":1e-4,
         "hidden_size": 256,
         "embedding_length": 128,
@@ -257,8 +257,8 @@ if __name__ == "__main__":
         # "attention_probs_dropout_prob": 0.1,
         # "classifier_dropout": None,
         "name": name,
-        "stdev_coeff": 1.3,
-        "stdev_start": 0.3,
+        "stdev_coeff": 1,
+        "stdev_start": 0.2,
         "stdev_start_coeff": 1,
     }
 
