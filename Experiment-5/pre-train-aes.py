@@ -171,7 +171,14 @@ def train(technique=None):
             batch = {k: v.to(device) for k, v in batch.items()}
 
             with torch.no_grad():
-                outputs = model(batch["input_ids"])
+                output = model(batch["input_ids"])
+
+            if is_transformer:
+                outputs = output.logits
+            else:
+                outputs = output
+
+            print(outputs)
 
             logits = [float(logit) for logit in outputs]
             [output_logits.append(logit) for logit in logits]
@@ -195,7 +202,10 @@ def train(technique=None):
         with torch.no_grad():
             output = model(batch["input_ids"])
 
-        outputs = output.logits
+        if is_transformer:
+            outputs = output.logits
+        else:
+            outputs = output
 
         print(outputs)
 
