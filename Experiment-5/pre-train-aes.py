@@ -200,6 +200,8 @@ def train(technique=None):
         else:
             outputs = output
 
+        print(outputs)
+
         logits = [float(logit) for logit in outputs]
         [output_logits.append(logit) for logit in logits]
         [output_labels.append(float(label)) for label in batch["labels"]]
@@ -217,7 +219,7 @@ def train(technique=None):
 if __name__ == "__main__":
     config = {
         "batch_size": 16,
-        "epochs": 100,
+        "epochs": 1,
         "lr":1e-3,
         "hidden_size": 256,
         "embedding_length": 128,
