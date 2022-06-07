@@ -253,7 +253,7 @@ if __name__ == "__main__":
         "hidden_act": "gelu",
         "hidden_dropout_prob": 0.1,
         "attention_probs_dropout_prob": 0.1,
-        "classification_dropout": None,
+        "classifier_dropout": None,
         "name": name,
         "stdev_coeff": 1,
         "stdev_start": 0.2,
