@@ -244,11 +244,11 @@ def train(technique=None):
 
 if __name__ == "__main__":
     config = {
-        "batch_size": 32,
+        "batch_size": 16,
         "epochs": 100,
         "lr":1e-3,
         "hidden_size": 256,
-        "embedding_length": 300,
+        "embedding_length": 128,
         # "num_hidden_layers": 8,
         # "num_attention_heads": 8,
         # "intermediate_size": 2048,
