@@ -195,10 +195,7 @@ def train(technique=None):
         with torch.no_grad():
             output = model(batch["input_ids"])
 
-        if is_transformer:
-            outputs = output.logits
-        else:
-            outputs = output
+        outputs = output.logits
 
         print(outputs)
 
