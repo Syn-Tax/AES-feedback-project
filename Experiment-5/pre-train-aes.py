@@ -124,7 +124,7 @@ def train(technique=None):
     train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=True, batch_size=wandb.config["batch_size"])
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
 
-    bert_config = transformers.BertConfig(
+    bert_config = transformers.BertConfig.from_pretrained(
         vocab_size=tokenizer.vocab_size,
         hidden_size=wandb.config["hidden_size"],
         num_hidden_layers=wandb.config["num_hidden_layers"],
@@ -138,7 +138,7 @@ def train(technique=None):
 
     #model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
     #model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-tiny", num_labels=1)
-    model = transformers.BertForSequenceClassification(config=config)
+    model = transformers.BertForSequenceClassification.from_pretrained("bert-base-uncased", config=bert_config)
 
     is_transformer = False
 
