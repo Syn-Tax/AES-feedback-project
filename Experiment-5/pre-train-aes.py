@@ -140,7 +140,7 @@ def train(technique=None):
         print(f"############## EPOCH: {epoch} ################")
         model.train()
         progress_bar = tqdm.auto.tqdm(range(len(train_dataloader)))
-        for batch in train_dataloader:
+        for i, batch in enumerate(train_dataloader):
             batch = {k: v.to(device) for k, v in batch.items()}
             output = model(batch["input_ids"])
             if is_transformer:
@@ -151,7 +151,7 @@ def train(technique=None):
             rmse = rmse_loss(outputs, batch["labels"])
             stdev = stdev_error(outputs, batch["labels"])
 
-            stdev_factor = math.exp(-wandb.config["stdev_coeff"]*(epoch/wandb.config["epochs"]))
+            stdev_factor = math.exp(-wandb.config["stdev_coeff"]*((epoch*len(train_dataloader)+i)/num_training_steps))
 
             #loss = mse + ((wandb.config["epochs"]/(epoch+1))*stdev)
             loss = ((1-stdev_factor)*rmse) + (stdev_factor * stdev)
@@ -177,8 +177,6 @@ def train(technique=None):
                 outputs = output.logits
             else:
                 outputs = output
-
-            print(outputs)
 
             logits = [float(logit) for logit in outputs]
             [output_logits.append(logit) for logit in logits]
@@ -207,8 +205,6 @@ def train(technique=None):
         else:
             outputs = output
 
-        print(outputs)
-
         logits = [float(logit) for logit in outputs]
         [output_logits.append(logit) for logit in logits]
         [output_labels.append(float(label)) for label in batch["labels"]]
@@ -226,7 +222,7 @@ def train(technique=None):
 if __name__ == "__main__":
     config = {
         "batch_size": 16,
-        "epochs": 1,
+        "epochs": 50,
         "lr":1e-3,
         "hidden_size": 256,
         "embedding_length": 128,
