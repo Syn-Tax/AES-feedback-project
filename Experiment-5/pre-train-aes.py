@@ -247,7 +247,7 @@ if __name__ == "__main__":
         "batch_size": 16,
         "epochs": 200,
         "lr":1e-4,
-        "hidden_size": 256,
+        "hidden_size": 512,
         "embedding_length": 128,
         # "num_hidden_layers": 8,
         # "num_attention_heads": 8,
