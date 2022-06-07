@@ -185,7 +185,7 @@ def train(technique=None):
             loss = ((1-stdev_factor)*rmse) + (stdev_factor * stdev)
             loss.backward()
 
-            wandb.log({"train_loss": loss, "train_stdev": stdev, "train_rmse": rmse, "stdev_factor": stdev_factor})
+            wandb.log({"train_loss": loss, "train_stdev": stdev, "train_rmse": rmse, "stdev_factor": stdev_factor, "lr": lr_scheduler.get_lr()})
 
             optimizer.step()
             optimizer.zero_grad()
