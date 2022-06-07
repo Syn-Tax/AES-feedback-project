@@ -159,7 +159,7 @@ def train(technique=None):
             if curr_frac < wandb.config["stdev_start"]:
                 stdev_factor = wandb.config["stdev_start_coeff"]
             else:
-                stdev_factor = math.exp(-wandb.config["stdev_coeff"]*(curr_frac + wandb.config["stdev_start"]))
+                stdev_factor = math.exp(-wandb.config["stdev_coeff"]*(curr_frac - wandb.config["stdev_start"]))
 
 
             #loss = mse + ((wandb.config["epochs"]/(epoch+1))*stdev)
