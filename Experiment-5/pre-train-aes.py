@@ -125,6 +125,7 @@ def train(technique=None):
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
 
     bert_config = transformers.BertConfig.from_pretrained(
+        "bert-base-uncased",
         vocab_size=tokenizer.vocab_size,
         hidden_size=wandb.config["hidden_size"],
         num_hidden_layers=wandb.config["num_hidden_layers"],
