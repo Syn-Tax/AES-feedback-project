@@ -259,9 +259,9 @@ if __name__ == "__main__":
         # "classifier_dropout": None,
         "name": name,
         "stdev_coeff": 1,
-        "stdev_start": 0.2,
-        "stdev_start_coeff": 0.95,
-        "r2_coeff": 0.0005
+        "stdev_start": 0.1,
+        "stdev_start_coeff": 1,
+        "r2_coeff": 0.0007
     }
 
     try:
