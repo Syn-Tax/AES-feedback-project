@@ -59,7 +59,7 @@ def stdev_error(output, target, unbiased=False):
 
     return torch.abs(target_std - output_std)
 
-def load_data(path, eval_frac=0.1):
+def load_data(path, eval_frac=0.25):
     df = pd.read_csv(path)
 
     df = df.sample(frac=1).reset_index(drop=True)
