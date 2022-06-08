@@ -246,7 +246,7 @@ def train(technique=None):
 
 if __name__ == "__main__":
     config = {
-        "batch_size": 64,
+        "batch_size": 8,
         "epochs": 75,
         "lr":1e-4,
         "hidden_size": 512,
