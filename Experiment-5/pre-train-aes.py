@@ -174,7 +174,7 @@ def train(technique=None):
             if curr_frac < wandb.config["stdev_start"]:
                 stdev_factor = wandb.config["stdev_start_coeff"]
             else:
-                stdev_factor = math.exp(-wandb.config["stdev_coeff"]*(curr_frac - wandb.config["stdev_start"]))
+                stdev_factor = wandb.config["stdev_start_coeff"]*math.exp(-wandb.config["stdev_coeff"]*(curr_frac - wandb.config["stdev_start"]))
 
 
             #loss = mse + ((wandb.config["epochs"]/(epoch+1))*stdev)
@@ -240,7 +240,7 @@ def train(technique=None):
     output_df = pd.DataFrame(list(zip(list(eval_df["text"]), output_logits, output_labels)))
     output_df.columns = ["text", "prediction", "true"]
 
-    output_df.to_csv(f"results-aes-self_attention.csv", index=False)
+    output_df.to_csv(f"/content/drive/MyDrive/Experiment-5/results-aes-self_attention.csv", index=False)
 
 
 if __name__ == "__main__":
