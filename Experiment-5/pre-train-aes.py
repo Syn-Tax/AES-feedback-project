@@ -258,7 +258,7 @@ if __name__ == "__main__":
         # "attention_probs_dropout_prob": 0.1,
         # "classifier_dropout": None,
         "name": name,
-        "stdev_coeff": 1,
+        "stdev_coeff": 0.6,
         "stdev_start": 0.1,
         "stdev_start_coeff": 1,
         "r2_coeff": 0.0007
