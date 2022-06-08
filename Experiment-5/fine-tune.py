@@ -159,7 +159,7 @@ def train(technique=None):
         progress_bar = tqdm.auto.tqdm(range(len(train_dataloader)))
         for i, batch in enumerate(train_dataloader):
             batch = {k: v.to(device) for k, v in batch.items()}
-            output = model(batch["input_ids"])
+            output = model(batch["input_ids"], batch_size=wandb.config["batch_size"])
             if is_transformer:
                 outputs = output.logits
             else:
@@ -196,7 +196,7 @@ def train(technique=None):
             batch = {k: v.to(device) for k, v in batch.items()}
 
             with torch.no_grad():
-                output = model(batch["input_ids"])
+                output = model(batch["input_ids"], batch_size=wandb.config["batch_size"])
 
             if is_transformer:
                 outputs = output.logits
@@ -223,7 +223,7 @@ def train(technique=None):
         batch = {k: v.to(device) for k, v in batch.items()}
 
         with torch.no_grad():
-            output = model(batch["input_ids"])
+            output = model(batch["input_ids"], batch_size=wandb.config["batch_size"])
 
         if is_transformer:
             outputs = output.logits
