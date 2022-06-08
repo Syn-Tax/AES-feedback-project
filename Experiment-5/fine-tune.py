@@ -140,7 +140,7 @@ def train(technique=None):
     #model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
     #model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-tiny", num_labels=1)
     #model = transformers.BertForSequenceClassification.from_pretrained("bert-base-uncased", config=bert_config)
-    model = pt.load("/content/drive/MyDrive/AES-feedback-project/Experiment-5/models/model-aes.pt")
+    model = pt.load("models/model-aes.pt")
 
     is_transformer = False
 
@@ -211,7 +211,7 @@ def train(technique=None):
         print(metrics)
         wandb.log(metrics)
 
-    torch.save(model, f"/content/drive/MyDrive/AES-feedback-project/Experiment-5/models/model-{name}.pt")
+    torch.save(model, f"models/model-{name}.pt")
 
 
     print("Final Evaluation")
@@ -241,7 +241,7 @@ def train(technique=None):
     output_df = pd.DataFrame(list(zip(list(eval_df["text"]), output_logits, output_labels)))
     output_df.columns = ["text", "prediction", "true"]
 
-    output_df.to_csv(f"/content/drive/MyDrive/AES-feedback-project/Experiment-5/results-aes-self_attention.csv", index=False)
+    output_df.to_csv(f"results-fine-tune-self_attention.csv", index=False)
 
 
 if __name__ == "__main__":
