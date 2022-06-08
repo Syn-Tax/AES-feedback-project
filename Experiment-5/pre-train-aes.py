@@ -210,7 +210,7 @@ def train(technique=None):
         print(metrics)
         wandb.log(metrics)
 
-    torch.save(model, f"model/model-{name}.pt")
+    torch.save(model, f"/content/drive/MyDrive/AES-feedback-project/Experiment-5/models/model-{name}.pt")
 
 
     print("Final Evaluation")

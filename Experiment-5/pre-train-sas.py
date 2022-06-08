@@ -140,7 +140,7 @@ def train(technique=None):
     #model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
     #model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-tiny", num_labels=1)
     #model = transformers.BertForSequenceClassification.from_pretrained("bert-base-uncased", config=bert_config)
-    model = torch.load("model/model-aes.pt")
+    model = torch.load("/content/drive/MyDrive/AES-feedback-project/Experiment-5/models/model-aes.pt")
 
     is_transformer = False
 
