@@ -241,7 +241,7 @@ def train(technique=None):
     output_df = pd.DataFrame(list(zip(list(eval_df["text"]), output_logits, output_labels)))
     output_df.columns = ["text", "prediction", "true"]
 
-    output_df.to_csv(f"/content/drive/MyDrive/AES-feedback-project/Experiment-5/results-{name}-trained_aes.csv", index=False)
+    output_df.to_csv(f"results-{name}-trained_aes.csv", index=False)
 
 
 if __name__ == "__main__":
