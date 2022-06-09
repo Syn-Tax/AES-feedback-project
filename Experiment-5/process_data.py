@@ -32,13 +32,14 @@ def SAS_dataset(technique):
     mad = sas_df["Score1"].mad()
 
     if technique == "Zscore":
-        sas_df.loc["Score1"] = sas_df["Score1"].apply(lambda x: Zscore(x, mean, stdev))
+        sas_df["Score1"] = sas_df["Score1"].apply(lambda x: Zscore(x, mean, stdev))
     elif technique == "min_max":
-        sas_df.loc["Score1"] = sas_df["Score1"].apply(lambda x: min_max(x, 3))
+        print("applying min max")
+        sas_df["Score1"] = sas_df["Score1"].apply(lambda x: min_max(x, 3))
     elif technique == "median_MAD":
-        sas_df.loc["Score1"] = sas_df["Score1"].apply(lambda x: median_MAD(x, median, mad))
+        sas_df["Score1"] = sas_df["Score1"].apply(lambda x: median_MAD(x, median, mad))
     elif technique == "tanh":
-        sas_df.loc["Score1"] = sas_df["Score1"].apply(lambda x: tanh(x, mean, stdev))
+        sas_df["Score1"] = sas_df["Score1"].apply(lambda x: tanh(x, mean, stdev))
     else:
         raise ValueError("that is not a valid normalisation method")
 
@@ -48,7 +49,7 @@ def SAS_dataset(technique):
     sas_df = sas_df[["EssayText", "Score1"]]
     sas_df.columns = ["text", "labels"]
 
-    print(sas_df.shape[0])
+    print("SAS dataset: ", sas_df.shape[0])
 
     sas_df.to_csv(f"datasets/sas/data_{technique}.csv", index=False, encoding="utf-8")
 
@@ -72,8 +73,6 @@ def AES_dataset(technique):
         median = df[score_column].median()
         mad = df[score_column].mad()
 
-        print(mean, stdev)
-
         if technique == "Zscore":
             df.loc[:, score_column] = df.loc[:, score_column].apply(lambda x: Zscore(x, mean, stdev))
         elif technique == "min_max":
@@ -91,8 +90,7 @@ def AES_dataset(technique):
 
     aes_df.columns = ["text", "labels"]
 
-    print(aes_df.shape[0])
-
+    print("AES dataset: ", aes_df.shape[0])
 
     aes_df.to_csv(f"datasets/aes/data_prompt_3_{technique}.csv", index=False, encoding="utf-8")
 
