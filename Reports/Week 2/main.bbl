@@ -1,0 +1,23 @@
+\begin{thebibliography}{1}
+
+\bibitem{turcWellReadStudentsLearn2019}
+I.~Turc, M.-W. Chang, K.~Lee, and K.~Toutanova, ``Well-{{Read Students Learn
+  Better}}: {{On}} the {{Importance}} of {{Pre-training Compact Models}},''
+  Sept. 2019.
+
+\bibitem{HewlettFoundationAutomated}
+``The {{Hewlett Foundation}}: {{Automated Essay Scoring}}.''
+  https://kaggle.com/competitions/asap-aes.
+
+\bibitem{HewlettFoundationShort}
+``The {{Hewlett Foundation}}: {{Short Answer Scoring}}.''
+  https://kaggle.com/competitions/asap-sas.
+
+\bibitem{johanberggrenRegressionClassificationAutomated2019}
+S.~Johan~Berggren, T.~Rama, and L.~{\O}vrelid, ``Regression or
+  {{Classification}}? {{Automated Essay Scoring}} for {{Norwegian}},'' in {\em
+  Proceedings of the {{Fourteenth Workshop}} on {{Innovative Use}} of {{NLP}}
+  for {{Building Educational Applications}}}, ({Florence, Italy}), pp.~92--102,
+  {Association for Computational Linguistics}, 2019.
+
+\end{thebibliography}

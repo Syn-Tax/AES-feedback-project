@@ -1,0 +1,131 @@
+% Created 2022-06-09 Thu 12:30
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{indentfirst}
+\author{Oscar Morris}
+\date{10 Jun 2022}
+\title{Week 2}
+\hypersetup{
+ pdfauthor={Oscar Morris},
+ pdftitle={Week 2},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.6)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+
+\section{Experiment 1}
+\label{sec:orgdf0d120}
+\subsection{Aims}
+\label{sec:org6843f3e}
+The first set of training was run to establish answers to the following questions:
+\begin{enumerate}
+\item Can outliers be detected by comparing multiple models?
+\begin{itemize}
+\item are the outlier answers all the same, or do they change depending on the model?
+\end{itemize}
+\item How does the distribution of machine-given marks compare with that of the human markers?
+\item How do models' predictions compare with each other (similar to question 1)?
+\item Do the results found in the EE hold for more repeats and training samples?
+\end{enumerate}
+
+\subsection{Planned Method}
+\label{sec:org0692a83}
+Three models were going to be trained on the Tin Iodide synthesis dataset (approx. 100 samples) to determine differences, these models were the highest performing in the EE:
+\begin{enumerate}
+\item BERT (at the bert-base-cased checkpoint)
+\item ALBERT (at the albert-base-v2 checkpoint)
+\item Longformer (at the longformer-base-4096 checkpoint)
+\end{enumerate}
+
+Each model was trained for 30 epochs with a batch size of 8. Tests were done evaluating the model on unseen data, and on training data.
+
+\subsection{Results}
+\label{sec:orgd1f7e2b}
+During training, the BERT model achieved similar values as in the EE, with \(r^2\) around \(0\) and MAE around 0.1.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{./exp1dist.png}
+\caption{BERT predictions against Human markers on training data, Orange is the ideal solution \label{fig:bert-dist-mean}}
+\end{figure}
+
+As can be seen from Fig. \ref{fig:bert-dist-mean}, the BERT model is always predicting approximately the same value, this value is approximately the mean of the human given marks (\(0.69\)). This is a common issue when training regression models, since most of the time it is better to predict the mean of the training data rather than randomly (and consequently learn the task). On re-examination of the data collected in the EE, it is very likely this this was also occurring in those experiments. This problem is known as ``underfitting,'' either to the training data or to the evaluation data, in this case it appears that the model is underfitting to both splits as the distribution is very similar between seen and unseen samples.
+
+\subsubsection{Cause hypotheses}
+\label{sec:org5f6b069}
+On the viewing of the data collected in this experiment, a few hypotheses were created for the causes (and potential solutions) to this problem:
+\begin{enumerate}
+\item The transformer-based models were too large to effectively learn from the data
+\item The distribution of human-given marks in the training data was too unbalanced, leading to underfitting.
+\item The AES task cannot be effectively learned on this dataset.
+\end{enumerate}
+
+\subsubsection{Cause Solutions}
+\label{sec:org9c580c1}
+Possible solutions to each hypothesis are:
+\begin{enumerate}
+\item Use a smaller pre-trained transformer based on BERT \cite{turcWellReadStudentsLearn2019}, or create and train a small LSTM or self-attention based model
+\item Testing on a more balanced dataset, or adjusting the loss metric to account for unbalanced data
+\item Testing on a different dataset that has been proven to be effective in previous work.
+\end{enumerate}
+
+Each solution has been tested on the Kaggle AES dataset \cite{HewlettFoundationAutomated} in further experiments.
+
+\section{Experiment 2}
+\label{sec:org45381a2}
+\subsection{Aims}
+\label{sec:org546000c}
+The second experiment aimed to determine the effectiveness of creating, and training a self-attention model from scratch.
+
+\subsection{Methods}
+\label{sec:orgc1efd26}
+The basic model architecture is shown in Fig. \ref{fig:basic-architecture}, with the architecture of the encoder shown in Fig. \ref{fig:encoder-architecture}.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=10cm]{../model-basic.png}
+\caption{Basic regression transformer architecture \label{fig:basic-architecture}}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=8cm]{../encoder.png}
+\caption{Encoder architecture \label{fig:encoder-architecture}}
+\end{figure}
+
+Each model was trained for 5 epochs, the model has a hidden LSTM size of 256 and an embedding length of 300.
+
+The model was then pre-trained and evaluated on the Kaggle AES (Automated Essay Scoring) dataset \cite{HewlettFoundationAutomated} and the Kaggle SAS (Short Answer Scoring) dataset \cite{HewlettFoundationShort}.
+
+
+\newpage
+
+\subsection{Results}
+\label{sec:org60561c2}
+The results for this model are very similar to the results for Experiment 1. This shows that the problem likely does not like with the model. However, due to the similar resuts to BERT, this model was used for all further Experiments due to the increase in control and data that a custom model gives.
+
+\section{Experiments 3-4}
+\label{sec:org0211994}
+No further progress was made in Experiment 3.
+
+In Experiment 4 the model was adjusted slightly, replacing the regression head with a classification head, this was to test the feasibility of a classification system rather than a regression system. Previous work has found it to be ineffective when compared to regression \cite{johanberggrenRegressionClassificationAutomated2019}. However, because of the difficulty in creating a system that allows a regression model to learn effectively it was still attempted. The model achieved approximately \(0.6\), almost double what would be expected if the model was guessing randomly, although the model is still not performing well. However, with further tuning and model improvements it is possible that this score could be significantly improved.
+
+
+\bibliographystyle{ieeetr}
+\bibliography{../bibliography}
+\end{document}

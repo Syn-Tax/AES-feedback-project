@@ -1,0 +1,79 @@
+#+title: Week 2
+#+author: Oscar Morris
+#+date: 10 Jun 2022
+#+options: toc:nil
+#+LaTeX_HEADER: \usepackage{indentfirst}
+
+
+* Experiment 1
+** Aims
+The first set of training was run to establish answers to the following questions:
+ 1. Can outliers be detected by comparing multiple models?
+    - are the outlier answers all the same, or do they change depending on the model?
+ 2. How does the distribution of machine-given marks compare with that of the human markers?
+ 3. How do models' predictions compare with each other (similar to question 1)?
+ 4. Do the results found in the EE hold for more repeats and training samples?
+
+** Planned Method
+Three models were going to be trained on the Tin Iodide synthesis dataset (approx. 100 samples) to determine differences, these models were the highest performing in the EE:
+1. BERT (at the bert-base-cased checkpoint)
+2. ALBERT (at the albert-base-v2 checkpoint)
+3. Longformer (at the longformer-base-4096 checkpoint)
+
+Each model was trained for 30 epochs with a batch size of 8. Tests were done evaluating the model on unseen data, and on training data.
+
+** Results
+During training, the BERT model achieved similar values as in the EE, with $r^2$ around $0$ and MAE around 0.1.
+
+#+caption: BERT predictions against Human markers on training data, Orange is the ideal solution label:fig:bert-dist-mean
+[[./exp1dist.png]]
+
+As can be seen from Fig. ref:fig:bert-dist-mean, the BERT model is always predicting approximately the same value, this value is approximately the mean of the human given marks ($0.69$). This is a common issue when training regression models, since most of the time it is better to predict the mean of the training data rather than randomly (and consequently learn the task). On re-examination of the data collected in the EE, it is very likely this this was also occurring in those experiments. This problem is known as "underfitting," either to the training data or to the evaluation data, in this case it appears that the model is underfitting to both splits as the distribution is very similar between seen and unseen samples.
+
+*** Cause hypotheses
+On the viewing of the data collected in this experiment, a few hypotheses were created for the causes (and potential solutions) to this problem:
+1. The transformer-based models were too large to effectively learn from the data
+2. The distribution of human-given marks in the training data was too unbalanced, leading to underfitting.
+3. The AES task cannot be effectively learned on this dataset.
+
+*** Cause Solutions
+Possible solutions to each hypothesis are:
+1. Use a smaller pre-trained transformer based on BERT [[cite:&turcWellReadStudentsLearn2019]], or create and train a small LSTM or self-attention based model
+2. Testing on a more balanced dataset, or adjusting the loss metric to account for unbalanced data
+3. Testing on a different dataset that has been proven to be effective in previous work.
+
+Each solution has been tested on the Kaggle AES dataset [[cite:&HewlettFoundationAutomated]] in further experiments.
+
+* Experiment 2
+** Aims
+The second experiment aimed to determine the effectiveness of creating, and training a self-attention model from scratch.
+
+** Methods
+The basic model architecture is shown in Fig. ref:fig:basic-architecture, with the architecture of the encoder shown in Fig. ref:fig:encoder-architecture.
+
+#+caption: Basic regression transformer architecture label:fig:basic-architecture
+#+attr_latex: :height 10cm
+[[../model-basic.png]]
+
+#+caption: Encoder architecture label:fig:encoder-architecture
+#+attr_latex: :height 8cm
+[[../encoder.png]]
+
+Each model was trained for 5 epochs, the model has a hidden LSTM size of 256 and an embedding length of 300.
+
+The model was then pre-trained and evaluated on the Kaggle AES (Automated Essay Scoring) dataset [[cite:&HewlettFoundationAutomated]] and the Kaggle SAS (Short Answer Scoring) dataset [[cite:&HewlettFoundationShort]].
+
+
+\newpage
+
+** Results
+The results for this model are very similar to the results for Experiment 1. This shows that the problem likely does not like with the model. However, due to the similar resuts to BERT, this model was used for all further Experiments due to the increase in control and data that a custom model gives.
+
+* Experiments 3-4
+No further progress was made in Experiment 3.
+
+In Experiment 4 the model was adjusted slightly, replacing the regression head with a classification head, this was to test the feasibility of a classification system rather than a regression system. Previous work has found it to be ineffective when compared to regression [[cite:&johanberggrenRegressionClassificationAutomated2019]]. However, because of the difficulty in creating a system that allows a regression model to learn effectively it was still attempted. The model achieved approximately $0.6$, almost double what would be expected if the model was guessing randomly, although the model is still not performing well. However, with further tuning and model improvements it is possible that this score could be significantly improved.
+
+
+bibliographystyle:ieeetr
+bibliography:../bibliography.bib
