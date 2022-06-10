@@ -145,9 +145,15 @@ During the training it was found that this metric performs significantly better 
 ** Fine Tuning Results
 The data that was used for fine tuning after being pre-trained on either the AES or SAS datasets, there was no particular difference found between pre-training on the two datasets. The Tin Iodide, lab report dataset that was used for fine tuning contained only 100 samples, this means that the model was over-fitting to the training data significantly. Therefore, no accurate judgement can be made on the performance of the model. When evaluated on the training split, the model achieves an $r^2$ value approaching 0.3, whereas when evaluated on the testing split, the model achieves $r^2$ values of between -1 and 0, this significant difference shows severe overfitting.
 
-#+caption: Prediced score against Human score on the training split of the Tin Iodide dataset, showing severe overfitting label:fig:overfit
+#+caption: Prediced score against Human score on the training split of the Tin Iodide dataset, showing signs of severe overfitting label:fig:overfit
 #+attr_latex: :width 10cm
 [[./exp5_fine_dist_train.png]]
+
+#+caption: Predicted score against Human score on the testing split of the Tin Iodide dataset, achieving an $r^2$ of $0.03$, showing signs of overfitting to the training split
+#+attr_latex: :width 10cm
+[[./exp5_fine_dist.png]]
+
+The most likely cause of this overfitting is the lack of training data available, it is possible that another cause could be the lack of variation in the training data, as is expected with real-world data, this dataset is very unbalanced with a large number of samples achieving approximately a score of 0.7 when rated by human markers.
 
 \newpage
 
@@ -155,6 +161,8 @@ The data that was used for fine tuning after being pre-trained on either the AES
 The models created in this block (length: 2 weeks) have shown significant improvement over previous attempts using transformer models for AES and show significant promise using the Kaggle datasets as a pre-training method to create a pre-training framework specific to AES, allowing for fewer samples to be used when fine-tuning a model for a real-world application.
 
 The pre-training step is time-efficient as the model is able to achieve comparatively high performance in just over an hour of training (on **either** the Kaggle AES dataset **or** the Kaggle SAS dataset).
+
+When the pre-trained models were fine-tuned to marking the Tin Iodide lab reports, the model showed signs of severe overfitting, likely due to a small number of training samples, or a lack of variety in the training samples (probably some combination of both). Another issue with this dataset is that the marks are given for the whole report, (out of which only one question is used) rather than just the question for which marks are being predicted. This does change the task slightly, from marking an answer, to predicting a score for a whole paper, based on the answer two one question. Because of this, it is very likely that the model will perform significantly better with better data.
 
 These results show great promise when it is considered that the hyperparameters presented here have not been tuned but only roughly estimated. Therefore, it is reasonable to suggest that with hyperparameter tuning the models could perform significantly better than presented here.
 

@@ -1,4 +1,4 @@
-% Created 2022-06-10 Fri 10:57
+% Created 2022-06-10 Fri 11:17
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -31,9 +31,9 @@
 
 
 \section{Experiment 1}
-\label{sec:orgeb4f5b4}
+\label{sec:orgd753815}
 \subsection{Aims}
-\label{sec:org1d0c005}
+\label{sec:org50a9781}
 The first set of training was run to establish answers to the following questions:
 \begin{enumerate}
 \item Can outliers be detected by comparing multiple models?
@@ -46,7 +46,7 @@ The first set of training was run to establish answers to the following question
 \end{enumerate}
 
 \subsection{Planned Method}
-\label{sec:org1945d59}
+\label{sec:org3a76d7f}
 Three models were going to be trained on the Tin Iodide synthesis dataset (approx. 100 samples) to determine differences, these models were the highest performing in the EE:
 \begin{enumerate}
 \item BERT (at the bert-base-cased checkpoint)
@@ -57,7 +57,7 @@ Three models were going to be trained on the Tin Iodide synthesis dataset (appro
 Each model was trained for 30 epochs with a batch size of 8. Tests were done evaluating the model on unseen data, and on training data.
 
 \subsection{Results}
-\label{sec:orgd05329d}
+\label{sec:orgcb28bbf}
 During training, the BERT model achieved similar values as in the EE, with \(r^2\) around \(0\) and MAE around 0.1.
 
 \begin{figure}[htbp]
@@ -69,7 +69,7 @@ During training, the BERT model achieved similar values as in the EE, with \(r^2
 As can be seen from Fig. \ref{fig:bert-dist-mean}, the BERT model is always predicting approximately the same value, this value is approximately the mean of the human given marks (\(0.69\)). This is a common issue when training regression models, since most of the time it is better to predict the mean of the training data rather than randomly (and consequently learn the task). On re-examination of the data collected in the EE, it is very likely this this was also occurring in those experiments. This problem is known as ``underfitting,'' either to the training data or to the evaluation data, in this case it appears that the model is underfitting to both splits as the distribution is very similar between seen and unseen samples. Because of this, only the BERT model was trained as the data collected in the EE showed that it was likely this was occurring for all models.
 
 \subsubsection{Cause hypotheses}
-\label{sec:orgf031c97}
+\label{sec:orgf1ca7a0}
 On the viewing of the data collected in this experiment, a few hypotheses were created for the causes (and potential solutions) to this problem:
 \begin{enumerate}
 \item The transformer-based models were too large to effectively learn from the data
@@ -78,7 +78,7 @@ On the viewing of the data collected in this experiment, a few hypotheses were c
 \end{enumerate}
 
 \subsubsection{Cause Solutions}
-\label{sec:orge4dd93f}
+\label{sec:orgfc53c33}
 Possible solutions to each hypothesis are:
 \begin{enumerate}
 \item Use a smaller pre-trained transformer based on BERT \cite{turcWellReadStudentsLearn2019}, or create and train a small LSTM or self-attention based model
@@ -89,13 +89,13 @@ Possible solutions to each hypothesis are:
 Each solution has been tested on the Kaggle AES dataset \cite{HewlettFoundationAutomated} in further experiments.
 
 \section{Experiment 2}
-\label{sec:org7da1789}
+\label{sec:orge72b242}
 \subsection{Aims}
-\label{sec:org362d186}
+\label{sec:orge0ad1d6}
 The second experiment aimed to determine the effectiveness of creating, and training a self-attention model from scratch.
 
 \subsection{Methods}
-\label{sec:orgf64f5b8}
+\label{sec:org0e6137e}
 The basic model architecture is shown in Fig. \ref{fig:basic-architecture}, with the architecture of the encoder shown in Fig. \ref{fig:encoder-architecture}.
 
 \begin{figure}[htbp]
@@ -118,23 +118,23 @@ The model was then pre-trained and evaluated on the Kaggle AES (Automated Essay 
 \newpage
 
 \subsection{Results}
-\label{sec:orgd41197f}
+\label{sec:orgf80cea8}
 The results for this model are very similar to the results for Experiment 1. This shows that the problem likely does not like with the model. However, due to the similar resuts to BERT, this model was used for all further Experiments due to the increase in control and data that a custom model gives.
 
 \section{Experiments 3, 4}
-\label{sec:org45a92c0}
+\label{sec:orga11189a}
 No further progress was made in Experiment 3.
 
 In Experiment 4 the model was adjusted slightly, replacing the regression head with a classification head, this was to test the feasibility of a classification system rather than a regression system. Previous work has found it to be ineffective when compared to regression \cite{johanberggrenRegressionClassificationAutomated2019}. However, because of the difficulty in creating a system that allows a regression model to learn effectively it was still attempted. The model achieved a classification accuracy of approximately \(0.6\), almost double what would be expected if the model was guessing randomly, although the model is still not performing well. However, with further tuning and model improvements it is possible that this score could be significantly improved.
 
 \section{Experiment 5}
-\label{sec:org0c9336b}
+\label{sec:org18b4ea0}
 \subsection{Aims}
-\label{sec:orgc12318f}
+\label{sec:org08a0d4b}
 Determine the effectiveness of a custom loss metric combining the difference between the standard deviation of the model's predictions and the human marks, and an error metric such as Mean Squared Error (MSE) or Root Mean Squared Error (RMSE). In later versions of the metric \(r^2\) was added.
 
 \subsection{Methods}
-\label{sec:orgd35153c}
+\label{sec:org3c841b2}
 Metrics are combined to form a single loss function by means of a weighted sum. The importance of a metric in this weighted sum can be defined by some coefficient \(s\):
 
 $$ L_T = s \cdot L_1 + (1-s) \cdot L_2 $$
@@ -179,7 +179,7 @@ where \(\sigma_{pred}\) is the standard deviation of the predicted values, \(\si
 The best performing models were trained for \(200\) epochs using a batch size of \(64\), however, no hyperparameter tuning has been executed. The model used has a hidden LSTM size of 512 and an embedding length of 128 giving approximately 70 million trainable parameters.
 
 \subsection{Pre-training Results}
-\label{sec:org2dba98b}
+\label{sec:orge6cf575}
 The model final model evaluated in this experiment beats all other attempts achieving an \(r^2\) score approaching (and occasionally exceeding) \(0.6\) on both Kaggle datasets.
 
 \begin{figure}[htbp]
@@ -207,22 +207,32 @@ The model trained only on the SAS dataset performed very well achieving an \(r^2
 During the training it was found that this metric performs significantly better when training using a high batch size. This is likely because it makes the standard deviation and coefficient of determination more analogous to what the model would predict in a real world setting and can, therefore, better optimise the model for this task.
 
 \subsection{Fine Tuning Results}
-\label{sec:org46b9966}
+\label{sec:orgd225071}
 The data that was used for fine tuning after being pre-trained on either the AES or SAS datasets, there was no particular difference found between pre-training on the two datasets. The Tin Iodide, lab report dataset that was used for fine tuning contained only 100 samples, this means that the model was over-fitting to the training data significantly. Therefore, no accurate judgement can be made on the performance of the model. When evaluated on the training split, the model achieves an \(r^2\) value approaching 0.3, whereas when evaluated on the testing split, the model achieves \(r^2\) values of between -1 and 0, this significant difference shows severe overfitting.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=10cm]{./exp5_fine_dist_train.png}
-\caption{Prediced score against Human score on the training split of the Tin Iodide dataset, showing severe overfitting \label{fig:overfit}}
+\caption{Prediced score against Human score on the training split of the Tin Iodide dataset, showing signs of severe overfitting \label{fig:overfit}}
 \end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=10cm]{./exp5_fine_dist.png}
+\caption{Predicted score against Human score on the testing split of the Tin Iodide dataset, achieving an \(r^2\) of \(0.03\), showing signs of overfitting to the training split}
+\end{figure}
+
+The most likely cause of this overfitting is the lack of training data available, it is possible that another cause could be the lack of variation in the training data, as is expected with real-world data, this dataset is very unbalanced with a large number of samples achieving approximately a score of 0.7 when rated by human markers.
 
 \newpage
 
 \section{Conclusion}
-\label{sec:orgc0d026d}
+\label{sec:org28ee607}
 The models created in this block (length: 2 weeks) have shown significant improvement over previous attempts using transformer models for AES and show significant promise using the Kaggle datasets as a pre-training method to create a pre-training framework specific to AES, allowing for fewer samples to be used when fine-tuning a model for a real-world application.
 
 The pre-training step is time-efficient as the model is able to achieve comparatively high performance in just over an hour of training (on \textbf{\textbf{either}} the Kaggle AES dataset \textbf{\textbf{or}} the Kaggle SAS dataset).
+
+When the pre-trained models were fine-tuned to marking the Tin Iodide lab reports, the model showed signs of severe overfitting, likely due to a small number of training samples, or a lack of variety in the training samples (probably some combination of both). Another issue with this dataset is that the marks are given for the whole report, (out of which only one question is used) rather than just the question for which marks are being predicted. This does change the task slightly, from marking an answer, to predicting a score for a whole paper, based on the answer two one question. Because of this, it is very likely that the model will perform significantly better with better data.
 
 These results show great promise when it is considered that the hyperparameters presented here have not been tuned but only roughly estimated. Therefore, it is reasonable to suggest that with hyperparameter tuning the models could perform significantly better than presented here.
 
