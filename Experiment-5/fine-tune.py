@@ -64,11 +64,11 @@ def load_data(path, eval_frac=0.25):
 
     df = df.sample(frac=1).reset_index(drop=True)
 
-    #train_df = df.iloc[int(df.shape[0]*eval_frac):]
+    train_df = df.iloc[int(df.shape[0]*eval_frac):]
     #train_df = df
     train_df.columns = ["text", "labels"]
 
-    #eval_df = df.iloc[:int(df.shape[0]*eval_frac)]
+    eval_df = df.iloc[:int(df.shape[0]*eval_frac)]
     #eval_df = df
     eval_df.columns = ["text", "labels"]
 
