@@ -121,7 +121,7 @@ where $\sigma_{pred}$ is the standard deviation of the predicted values, $\sigma
 
 The best performing models were trained for $200$ epochs using a batch size of $64$, however, no hyperparameter tuning has been executed. The model used has a hidden LSTM size of 512 and an embedding length of 128 giving approximately 70 million trainable parameters.
 
-** Results
+** Pre-training Results
 The model final model evaluated in this experiment beats all other attempts achieving an $r^2$ score approaching (and occasionally exceeding) $0.6$ on both Kaggle datasets.
 
 #+caption: Predicted score against Human given score on a run achieving $r^2 \approx 0.58$
@@ -141,6 +141,13 @@ The model trained only on the SAS dataset performed very well achieving an $r^2$
 [[./exp5_sas_confusion.png]]
 
 During the training it was found that this metric performs significantly better when training using a high batch size. This is likely because it makes the standard deviation and coefficient of determination more analogous to what the model would predict in a real world setting and can, therefore, better optimise the model for this task.
+
+** Fine Tuning Results
+The data that was used for fine tuning after being pre-trained on either the AES or SAS datasets, there was no particular difference found between pre-training on the two datasets. The Tin Iodide, lab report dataset that was used for fine tuning contained only 100 samples, this means that the model was over-fitting to the training data significantly. Therefore, no accurate judgement can be made on the performance of the model.
+
+#+caption: Prediced score against Human score on the training split of the Tin Iodide dataset, showing severe overfitting label:fig:overfit
+#+attr_latex: :width 10cm
+[[./exp5_fine_dist_train.png]]
 
 \newpage
 
