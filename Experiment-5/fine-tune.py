@@ -64,10 +64,12 @@ def load_data(path, eval_frac=0.25):
 
     df = df.sample(frac=1).reset_index(drop=True)
 
-    train_df = df.iloc[int(df.shape[0]*eval_frac):]
+    #train_df = df.iloc[int(df.shape[0]*eval_frac):]
+    train_df = df
     train_df.columns = ["text", "labels"]
 
-    eval_df = df.iloc[:int(df.shape[0]*eval_frac)]
+    #eval_df = df.iloc[:int(df.shape[0]*eval_frac)]
+    eval_df = df
     eval_df.columns = ["text", "labels"]
 
     train_df = train_df.reset_index(drop=True)
@@ -137,10 +139,10 @@ def train(technique=None):
     #     classifier_dropout=wandb.config["classifier_dropout"]
     # )
 
-    model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
+    #model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
     #model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-tiny", num_labels=1)
     #model = transformers.BertForSequenceClassification.from_pretrained("bert-base-uncased", config=bert_config)
-    #model = torch.load("models/model-sas.pt")
+    model = torch.load("models/model-sas.pt")
 
     is_transformer = False
 
