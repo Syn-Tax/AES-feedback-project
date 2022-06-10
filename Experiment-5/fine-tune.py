@@ -59,7 +59,7 @@ def stdev_error(output, target, unbiased=False):
 
     return torch.abs(target_std - output_std)
 
-def load_data(path, eval_frac=0.25):
+def load_data(path, eval_frac=0.1):
     df = pd.read_csv(path)
 
     df = df.sample(frac=1).reset_index(drop=True)
@@ -248,7 +248,7 @@ def train(technique=None):
 
 if __name__ == "__main__":
     config = {
-        "batch_size": 16,
+        "batch_size": 8,
         "epochs": 1000,
         "lr":1e-4,
         "hidden_size": 512,
