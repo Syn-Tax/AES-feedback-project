@@ -65,11 +65,11 @@ def load_data(path, eval_frac=0.25):
     df = df.sample(frac=1).reset_index(drop=True)
 
     #train_df = df.iloc[int(df.shape[0]*eval_frac):]
-    train_df = df
+    #train_df = df
     train_df.columns = ["text", "labels"]
 
     #eval_df = df.iloc[:int(df.shape[0]*eval_frac)]
-    eval_df = df
+    #eval_df = df
     eval_df.columns = ["text", "labels"]
 
     train_df = train_df.reset_index(drop=True)
@@ -249,7 +249,7 @@ def train(technique=None):
 if __name__ == "__main__":
     config = {
         "batch_size": 16,
-        "epochs": 500,
+        "epochs": 1000,
         "lr":1e-4,
         "hidden_size": 512,
         "embedding_length": 128,
@@ -261,7 +261,7 @@ if __name__ == "__main__":
         # "attention_probs_dropout_prob": 0.1,
         # "classifier_dropout": None,
         "name": name,
-        "stdev_coeff": 1,
+        "stdev_coeff": 0.95,
         "stdev_start": 0.2,
         "stdev_start_coeff": 1,
         "r2_coeff": 0.0007
