@@ -249,7 +249,7 @@ def train(technique=None):
 if __name__ == "__main__":
     config = {
         "batch_size": 8,
-        "epochs": 1000,
+        "epochs": 700,
         "lr":1e-4,
         "hidden_size": 512,
         "embedding_length": 128,
