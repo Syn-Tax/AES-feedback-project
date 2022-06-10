@@ -143,7 +143,7 @@ The model trained only on the SAS dataset performed very well achieving an $r^2$
 During the training it was found that this metric performs significantly better when training using a high batch size. This is likely because it makes the standard deviation and coefficient of determination more analogous to what the model would predict in a real world setting and can, therefore, better optimise the model for this task.
 
 ** Fine Tuning Results
-The data that was used for fine tuning after being pre-trained on either the AES or SAS datasets, there was no particular difference found between pre-training on the two datasets. The Tin Iodide, lab report dataset that was used for fine tuning contained only 100 samples, this means that the model was over-fitting to the training data significantly. Therefore, no accurate judgement can be made on the performance of the model.
+The data that was used for fine tuning after being pre-trained on either the AES or SAS datasets, there was no particular difference found between pre-training on the two datasets. The Tin Iodide, lab report dataset that was used for fine tuning contained only 100 samples, this means that the model was over-fitting to the training data significantly. Therefore, no accurate judgement can be made on the performance of the model. When evaluated on the training split, the model achieves an $r^2$ value approaching 0.3, whereas when evaluated on the testing split, the model achieves $r^2$ values of between -1 and 0, this significant difference shows severe overfitting.
 
 #+caption: Prediced score against Human score on the training split of the Tin Iodide dataset, showing severe overfitting label:fig:overfit
 #+attr_latex: :width 10cm

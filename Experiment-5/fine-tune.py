@@ -59,7 +59,7 @@ def stdev_error(output, target, unbiased=False):
 
     return torch.abs(target_std - output_std)
 
-def load_data(path, eval_frac=0.1):
+def load_data(path, eval_frac=0.3):
     df = pd.read_csv(path)
 
     df = df.sample(frac=1).reset_index(drop=True)
@@ -139,10 +139,10 @@ def train(technique=None):
     #     classifier_dropout=wandb.config["classifier_dropout"]
     # )
 
-    model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
+    #model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
     #model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-tiny", num_labels=1)
     #model = transformers.BertForSequenceClassification.from_pretrained("bert-base-uncased", config=bert_config)
-    #model = torch.load("models/model-sas.pt")
+    model = torch.load("models/model-sas.pt")
 
     is_transformer = False
 
