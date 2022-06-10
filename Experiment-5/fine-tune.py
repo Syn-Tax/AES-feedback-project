@@ -123,8 +123,8 @@ def train(technique=None):
     train_dataset = process_data(train_df, tokenizer)
     eval_dataset = process_data(eval_df, tokenizer)
 
-    train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=True, batch_size=wandb.config["batch_size"])
-    eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
+    train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=False, batch_size=wandb.config["batch_size"])
+    eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=False, batch_size=wandb.config["batch_size"])
 
     # bert_config = transformers.BertConfig.from_pretrained(
     #     "bert-base-uncased",
@@ -161,8 +161,6 @@ def train(technique=None):
         progress_bar = tqdm.auto.tqdm(range(len(train_dataloader)))
         for i, batch in enumerate(train_dataloader):
             batch = {k: v.to(device) for k, v in batch.items()}
-            print(len(batch["labels"]))
-            sys.exit(0)
             output = model(batch["input_ids"], batch_size=len(batch["labels"]))
             if is_transformer:
                 outputs = output.logits
@@ -200,7 +198,7 @@ def train(technique=None):
             batch = {k: v.to(device) for k, v in batch.items()}
 
             with torch.no_grad():
-                output = model(batch["input_ids"], batch_size=wandb.config["batch_size"])
+                output = model(batch["input_ids"], batch_size=len(batch["labels"]))
 
             if is_transformer:
                 outputs = output.logits
@@ -227,7 +225,7 @@ def train(technique=None):
         batch = {k: v.to(device) for k, v in batch.items()}
 
         with torch.no_grad():
-            output = model(batch["input_ids"], batch_size=wandb.config["batch_size"])
+            output = model(batch["input_ids"], batch_size=len(batch["labels"]))
 
         if is_transformer:
             outputs = output.logits
