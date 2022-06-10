@@ -161,9 +161,9 @@ def train(technique=None):
         progress_bar = tqdm.auto.tqdm(range(len(train_dataloader)))
         for i, batch in enumerate(train_dataloader):
             batch = {k: v.to(device) for k, v in batch.items()}
-            print(batch)
+            print(len(batch["labels"]))
             sys.exit(0)
-            output = model(batch["input_ids"], batch_size=wandb.config["batch_size"])
+            output = model(batch["input_ids"], batch_size=len(batch["labels"]))
             if is_transformer:
                 outputs = output.logits
             else:
