@@ -140,6 +140,8 @@ The model trained only on the SAS dataset performed very well achieving an $r^2$
 #+attr_latex: :width 10cm
 [[./exp5_sas_confusion.png]]
 
+During the training it was found that this metric performs significantly better when training using a high batch size. This is likely because it makes the standard deviation and coefficient of determination more analogous to what the model would predict in a real world setting and can, therefore, better optimise the model for this task.
+
 \newpage
 
 * Conclusion
