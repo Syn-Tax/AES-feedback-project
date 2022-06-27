@@ -262,6 +262,6 @@ if __name__ == "__main__":
     }
 
     technique = "min_max"
-    run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-small-prompt3-msestd", config=config)
+    run = wandb.init(project="AES-Experiment-6", name=f"{name}-{technique}-small-prompt3-msestd", config=config)
     train_model(technique=technique)
     run.finish()
