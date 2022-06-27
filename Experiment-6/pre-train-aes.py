@@ -239,7 +239,7 @@ def train_model(technique=None):
     model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"], wandb.config["num_attention_heads"], wandb.config["num_encoder_layers"], 512, regression_size=wandb.config["regression_size"])
     count_parameters(model)
 
-    sys.exit(0)
+    #sys.exit(0)
 
     is_transformer = False
 
@@ -266,7 +266,7 @@ if __name__ == "__main__":
         "epochs": 50,
         "lr":1e-4,
         "hidden_size": 1024,
-        "embedding_length": 256,
+        "embedding_length": 128,
         "num_attention_heads": 16,
         "num_encoder_layers": 6,
         "regression_size": 512,
