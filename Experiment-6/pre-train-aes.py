@@ -12,7 +12,7 @@ import wandb
 import os
 import tqdm
 import sys
-from model import SelfAttention
+from model import Model
 
 name = "aes"
 
@@ -140,6 +140,7 @@ def train(technique=None):
     # model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
     #model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-tiny", num_labels=1)
     #model = transformers.BertForSequenceClassification.from_pretrained("bert-base-uncased", config=bert_config)
+    model = Model(1)
 
     is_transformer = False
 
@@ -158,9 +159,8 @@ def train(technique=None):
         progress_bar = tqdm.auto.tqdm(range(len(train_dataloader)))
         for i, batch in enumerate(train_dataloader):
             batch = {k: v.to(device) for k, v in batch.items()}
-            print(batch)
-            sys.exit(0)
             output = model(batch["input_ids"])
+            sys.exit(0)
             if is_transformer:
                 outputs = output.logits
             else:
