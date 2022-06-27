@@ -25,7 +25,7 @@ Three models were going to be trained on the Tin Iodide synthesis dataset (appro
 Each model was trained for 30 epochs with a batch size of 8. Tests were done evaluating the model on unseen data, and on training data.
 
 ** Results
-During training, the BERT model achieved similar values as in the EE, with $r^2$ around $0$ and MAE around 0.1.
+During training, the BERT model achieved similar values as in the EE, with $r^2$ around $0$ and MAE (Mean Absolute Error) around 0.1.
 
 #+caption: BERT predictions against Human markers on training data, Orange is the ideal solution label:fig:bert-dist-mean
 #+attr_latex: :width 10cm
@@ -62,7 +62,7 @@ The basic model architecture is shown in Fig. ref:fig:basic-architecture, with t
 #+attr_latex: :height 8cm
 [[../encoder.png]]
 
-Each model was trained for 5 epochs, the model has a hidden LSTM size of 256 and an embedding length of 300.
+Each model was trained for 5 epochs, the model has a hidden matrix size of 256 and an embedding length of 300.
 
 The model was then pre-trained and evaluated on the Kaggle AES (Automated Essay Scoring) dataset [[cite:&HewlettFoundationAutomated]] and the Kaggle SAS (Short Answer Scoring) dataset [[cite:&HewlettFoundationShort]].
 
@@ -79,7 +79,7 @@ In Experiment 4 the model was adjusted slightly, replacing the regression head w
 
 * Experiment 5
 ** Aims
-Determine the effectiveness of a custom loss metric combining the difference between the standard deviation of the model's predictions and the human marks, and an error metric such as Mean Squared Error (MSE) or Root Mean Squared Error (RMSE). In later versions of the metric $r^2$ was added.
+Determine the effectiveness of a custom loss metric combining the difference between the standard deviation of the model's predictions and the human marks, and an error metric such as Root Mean Squared Error (RMSE). In later versions of the metric the coefficient of determination, $r^2$, was added.
 
 ** Methods
 Metrics are combined to form a single loss function by means of a weighted sum. The importance of a metric in this weighted sum can be defined by some coefficient $s$:
@@ -92,13 +92,13 @@ $$ s = e^{-a\frac{t}{T}} $$
 
 where $a$ is a coefficient determining the rate of decay, $t$ is the current epoch and $T$ is the total number of epochs.
 
-This method was found to be much more effective, achieving an $r^2$ value of approximately 0.1, significantly higher than any previous attempt. This model was only used on the Kaggle AES dataset referenced above.
+This method was found to be much more effective, achieving an $r^2$ value of approximately 0.1, significantly higher than any previous attempt. This version of the metric was only used on the Kaggle AES dataset referenced above.
 
 #+caption: Graph of $s$ against $\frac{t}{T}$, $a = 0.88$ label:fig:exponential_nob
 #+attr_latex: :width 7cm
 [[./decay_nob.png]]
 
-During the training of this model, the difference between the predicted and human standard deviations remained relatively high, much higher than expected. Therefore, it was decided to redefine the decay curve to allow the model more time to focus on the achieving the correct standard devaiation. Therefore, $s$ was defined as a piecewise function as follows:
+During the training of this model, the difference between the predicted and human standard deviations remained relatively high, much higher than expected. Therefore, it was decided to redefine the decay curve to allow the model more time to focus on the achieving the correct standard devaiation. Therefore, $s$ was defined as a piecewise function:
 
 \[ s = \begin{cases}
 c & 0\leq \frac{t}{T} \leq b \\
@@ -113,13 +113,13 @@ where $c$ is the starting value of $s$ (usually set to $1$) and $b$ is the point
 
 The individual loss functions (after $r^2$ was added) are defined as follows:
 
-$$ L_1 = \abs(\sigma_{pred} - \sigma_{true}) $$
+$$ L_1 = |\sigma_{pred} - \sigma_{true}| $$
 
 $$ L_2 = \text{RMSE}-d \cdot r^2 $$
 
 where $\sigma_{pred}$ is the standard deviation of the predicted values, $\sigma_{true}$ is the standard deviation of the human given values, $d$ is a constant coefficient and $r^2$ is the coefficient of determination.
 
-The best performing models were trained for $200$ epochs using a batch size of $64$, however, no hyperparameter tuning has been executed. The model used has a hidden LSTM size of 512 and an embedding length of 128 giving approximately 70 million trainable parameters.
+The best performing models were trained for $200$ epochs using a batch size of $64$, however, no hyperparameter tuning has been performed. The model used has a hidden matrix size of 512 and an embedding length of 128 giving approximately 70 million trainable parameters.
 
 ** Pre-training Results
 The model final model evaluated in this experiment beats all other attempts achieving an $r^2$ score approaching (and occasionally exceeding) $0.6$ on both Kaggle datasets.
@@ -143,9 +143,9 @@ The model trained only on the SAS dataset performed very well achieving an $r^2$
 During the training it was found that this metric performs significantly better when training using a high batch size. This is likely because it makes the standard deviation and coefficient of determination more analogous to what the model would predict in a real world setting and can, therefore, better optimise the model for this task.
 
 ** Fine Tuning Results
-The data that was used for fine tuning after being pre-trained on either the AES or SAS datasets, there was no particular difference found between pre-training on the two datasets. The Tin Iodide, lab report dataset that was used for fine tuning contained only 100 samples, this means that the model was over-fitting to the training data significantly. Therefore, no accurate judgement can be made on the performance of the model. When evaluated on the training split, the model achieves an $r^2$ value approaching 0.3, whereas when evaluated on the testing split, the model achieves $r^2$ values of between -1 and 0, this significant difference shows severe overfitting.
+The data that was used for fine tuning after being pre-trained on either the AES or SAS datasets, there was no particular difference found between pre-training on the two datasets. The Tin Iodide, lab report dataset that was used for fine tuning contained only 100 samples, this means that the model was over-fitting to the training data significantly. Therefore, no accurate judgement can be made on the performance of the model. When evaluated on the training split, the model achieves an $r^2$ value approaching 0.3, whereas when evaluated on the testing split, the model achieves $r^2$ values of between -1 and 0, this significant difference implies severe overfitting.
 
-#+caption: Prediced score against Human score on the training split of the Tin Iodide dataset, showing signs of severe overfitting label:fig:overfit
+#+caption: Predicted score against Human score on the training split of the Tin Iodide dataset, showing signs of severe overfitting label:fig:overfit
 #+attr_latex: :width 10cm
 [[./exp5_fine_dist_train.png]]
 
@@ -153,9 +153,7 @@ The data that was used for fine tuning after being pre-trained on either the AES
 #+attr_latex: :width 10cm
 [[./exp5_fine_dist.png]]
 
-The most likely cause of this overfitting is the lack of training data available, it is possible that another cause could be the lack of variation in the training data, as is expected with real-world data, this dataset is very unbalanced with a large number of samples achieving approximately a score of 0.7 when rated by human markers.
-
-\newpage
+The most likely cause of this overfitting is the lack of training data available, it is possible that another cause could be the lack of variation in the training data, as is expected with real-world data, this dataset is very unbalanced with a large number of samples achieving approximately a score of 0.7 when scored by human markers, this would be very challenging to fix and may require similar approach to that used in classification metrics to adjust for imbalanced data.
 
 * Conclusion
 The models created in this block (length: 2 weeks) have shown significant improvement over previous attempts using transformer models for AES and show significant promise using the Kaggle datasets as a pre-training method to create a pre-training framework specific to AES, allowing for fewer samples to be used when fine-tuning a model for a real-world application.

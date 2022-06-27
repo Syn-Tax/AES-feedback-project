@@ -1,4 +1,4 @@
-% Created 2022-06-10 Fri 11:17
+% Created 2022-06-10 Fri 13:33
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -31,9 +31,9 @@
 
 
 \section{Experiment 1}
-\label{sec:orgd753815}
+\label{sec:orgd2693b3}
 \subsection{Aims}
-\label{sec:org50a9781}
+\label{sec:org01d9086}
 The first set of training was run to establish answers to the following questions:
 \begin{enumerate}
 \item Can outliers be detected by comparing multiple models?
@@ -46,7 +46,7 @@ The first set of training was run to establish answers to the following question
 \end{enumerate}
 
 \subsection{Planned Method}
-\label{sec:org3a76d7f}
+\label{sec:org2c78348}
 Three models were going to be trained on the Tin Iodide synthesis dataset (approx. 100 samples) to determine differences, these models were the highest performing in the EE:
 \begin{enumerate}
 \item BERT (at the bert-base-cased checkpoint)
@@ -57,8 +57,8 @@ Three models were going to be trained on the Tin Iodide synthesis dataset (appro
 Each model was trained for 30 epochs with a batch size of 8. Tests were done evaluating the model on unseen data, and on training data.
 
 \subsection{Results}
-\label{sec:orgcb28bbf}
-During training, the BERT model achieved similar values as in the EE, with \(r^2\) around \(0\) and MAE around 0.1.
+\label{sec:orgcc34ad2}
+During training, the BERT model achieved similar values as in the EE, with \(r^2\) around \(0\) and MAE (Mean Absolute Error) around 0.1.
 
 \begin{figure}[htbp]
 \centering
@@ -69,7 +69,7 @@ During training, the BERT model achieved similar values as in the EE, with \(r^2
 As can be seen from Fig. \ref{fig:bert-dist-mean}, the BERT model is always predicting approximately the same value, this value is approximately the mean of the human given marks (\(0.69\)). This is a common issue when training regression models, since most of the time it is better to predict the mean of the training data rather than randomly (and consequently learn the task). On re-examination of the data collected in the EE, it is very likely this this was also occurring in those experiments. This problem is known as ``underfitting,'' either to the training data or to the evaluation data, in this case it appears that the model is underfitting to both splits as the distribution is very similar between seen and unseen samples. Because of this, only the BERT model was trained as the data collected in the EE showed that it was likely this was occurring for all models.
 
 \subsubsection{Cause hypotheses}
-\label{sec:orgf1ca7a0}
+\label{sec:org2aac7b9}
 On the viewing of the data collected in this experiment, a few hypotheses were created for the causes (and potential solutions) to this problem:
 \begin{enumerate}
 \item The transformer-based models were too large to effectively learn from the data
@@ -78,7 +78,7 @@ On the viewing of the data collected in this experiment, a few hypotheses were c
 \end{enumerate}
 
 \subsubsection{Cause Solutions}
-\label{sec:orgfc53c33}
+\label{sec:orgd25da44}
 Possible solutions to each hypothesis are:
 \begin{enumerate}
 \item Use a smaller pre-trained transformer based on BERT \cite{turcWellReadStudentsLearn2019}, or create and train a small LSTM or self-attention based model
@@ -89,13 +89,13 @@ Possible solutions to each hypothesis are:
 Each solution has been tested on the Kaggle AES dataset \cite{HewlettFoundationAutomated} in further experiments.
 
 \section{Experiment 2}
-\label{sec:orge72b242}
+\label{sec:orga0d33b2}
 \subsection{Aims}
-\label{sec:orge0ad1d6}
+\label{sec:org448b7fd}
 The second experiment aimed to determine the effectiveness of creating, and training a self-attention model from scratch.
 
 \subsection{Methods}
-\label{sec:org0e6137e}
+\label{sec:orgb4b947b}
 The basic model architecture is shown in Fig. \ref{fig:basic-architecture}, with the architecture of the encoder shown in Fig. \ref{fig:encoder-architecture}.
 
 \begin{figure}[htbp]
@@ -110,7 +110,7 @@ The basic model architecture is shown in Fig. \ref{fig:basic-architecture}, with
 \caption{Encoder architecture \label{fig:encoder-architecture}}
 \end{figure}
 
-Each model was trained for 5 epochs, the model has a hidden LSTM size of 256 and an embedding length of 300.
+Each model was trained for 5 epochs, the model has a hidden matrix size of 256 and an embedding length of 300.
 
 The model was then pre-trained and evaluated on the Kaggle AES (Automated Essay Scoring) dataset \cite{HewlettFoundationAutomated} and the Kaggle SAS (Short Answer Scoring) dataset \cite{HewlettFoundationShort}.
 
@@ -118,23 +118,23 @@ The model was then pre-trained and evaluated on the Kaggle AES (Automated Essay 
 \newpage
 
 \subsection{Results}
-\label{sec:orgf80cea8}
+\label{sec:orgedb8c05}
 The results for this model are very similar to the results for Experiment 1. This shows that the problem likely does not like with the model. However, due to the similar resuts to BERT, this model was used for all further Experiments due to the increase in control and data that a custom model gives.
 
 \section{Experiments 3, 4}
-\label{sec:orga11189a}
+\label{sec:org25fffdf}
 No further progress was made in Experiment 3.
 
 In Experiment 4 the model was adjusted slightly, replacing the regression head with a classification head, this was to test the feasibility of a classification system rather than a regression system. Previous work has found it to be ineffective when compared to regression \cite{johanberggrenRegressionClassificationAutomated2019}. However, because of the difficulty in creating a system that allows a regression model to learn effectively it was still attempted. The model achieved a classification accuracy of approximately \(0.6\), almost double what would be expected if the model was guessing randomly, although the model is still not performing well. However, with further tuning and model improvements it is possible that this score could be significantly improved.
 
 \section{Experiment 5}
-\label{sec:org18b4ea0}
+\label{sec:org687f22d}
 \subsection{Aims}
-\label{sec:org08a0d4b}
-Determine the effectiveness of a custom loss metric combining the difference between the standard deviation of the model's predictions and the human marks, and an error metric such as Mean Squared Error (MSE) or Root Mean Squared Error (RMSE). In later versions of the metric \(r^2\) was added.
+\label{sec:orge85cc53}
+Determine the effectiveness of a custom loss metric combining the difference between the standard deviation of the model's predictions and the human marks, and an error metric such as Root Mean Squared Error (RMSE). In later versions of the metric the coefficient of determination, \(r^2\), was added.
 
 \subsection{Methods}
-\label{sec:org3c841b2}
+\label{sec:orgeb93c27}
 Metrics are combined to form a single loss function by means of a weighted sum. The importance of a metric in this weighted sum can be defined by some coefficient \(s\):
 
 $$ L_T = s \cdot L_1 + (1-s) \cdot L_2 $$
@@ -145,7 +145,7 @@ $$ s = e^{-a\frac{t}{T}} $$
 
 where \(a\) is a coefficient determining the rate of decay, \(t\) is the current epoch and \(T\) is the total number of epochs.
 
-This method was found to be much more effective, achieving an \(r^2\) value of approximately 0.1, significantly higher than any previous attempt. This model was only used on the Kaggle AES dataset referenced above.
+This method was found to be much more effective, achieving an \(r^2\) value of approximately 0.1, significantly higher than any previous attempt. This version of the metric was only used on the Kaggle AES dataset referenced above.
 
 \begin{figure}[htbp]
 \centering
@@ -153,7 +153,7 @@ This method was found to be much more effective, achieving an \(r^2\) value of a
 \caption{Graph of \(s\) against \(\frac{t}{T}\), \(a = 0.88\) \label{fig:exponential_nob}}
 \end{figure}
 
-During the training of this model, the difference between the predicted and human standard deviations remained relatively high, much higher than expected. Therefore, it was decided to redefine the decay curve to allow the model more time to focus on the achieving the correct standard devaiation. Therefore, \(s\) was defined as a piecewise function as follows:
+During the training of this model, the difference between the predicted and human standard deviations remained relatively high, much higher than expected. Therefore, it was decided to redefine the decay curve to allow the model more time to focus on the achieving the correct standard devaiation. Therefore, \(s\) was defined as a piecewise function:
 
 \[ s = \begin{cases}
 c & 0\leq \frac{t}{T} \leq b \\
@@ -170,16 +170,16 @@ where \(c\) is the starting value of \(s\) (usually set to \(1\)) and \(b\) is t
 
 The individual loss functions (after \(r^2\) was added) are defined as follows:
 
-$$ L_1 = \abs(\sigma_{pred} - \sigma_{true}) $$
+$$ L_1 = |\sigma_{pred} - \sigma_{true}| $$
 
 $$ L_2 = \text{RMSE}-d \cdot r^2 $$
 
 where \(\sigma_{pred}\) is the standard deviation of the predicted values, \(\sigma_{true}\) is the standard deviation of the human given values, \(d\) is a constant coefficient and \(r^2\) is the coefficient of determination.
 
-The best performing models were trained for \(200\) epochs using a batch size of \(64\), however, no hyperparameter tuning has been executed. The model used has a hidden LSTM size of 512 and an embedding length of 128 giving approximately 70 million trainable parameters.
+The best performing models were trained for \(200\) epochs using a batch size of \(64\), however, no hyperparameter tuning has been performed. The model used has a hidden matrix size of 512 and an embedding length of 128 giving approximately 70 million trainable parameters.
 
 \subsection{Pre-training Results}
-\label{sec:orge6cf575}
+\label{sec:orgffae461}
 The model final model evaluated in this experiment beats all other attempts achieving an \(r^2\) score approaching (and occasionally exceeding) \(0.6\) on both Kaggle datasets.
 
 \begin{figure}[htbp]
@@ -207,13 +207,13 @@ The model trained only on the SAS dataset performed very well achieving an \(r^2
 During the training it was found that this metric performs significantly better when training using a high batch size. This is likely because it makes the standard deviation and coefficient of determination more analogous to what the model would predict in a real world setting and can, therefore, better optimise the model for this task.
 
 \subsection{Fine Tuning Results}
-\label{sec:orgd225071}
-The data that was used for fine tuning after being pre-trained on either the AES or SAS datasets, there was no particular difference found between pre-training on the two datasets. The Tin Iodide, lab report dataset that was used for fine tuning contained only 100 samples, this means that the model was over-fitting to the training data significantly. Therefore, no accurate judgement can be made on the performance of the model. When evaluated on the training split, the model achieves an \(r^2\) value approaching 0.3, whereas when evaluated on the testing split, the model achieves \(r^2\) values of between -1 and 0, this significant difference shows severe overfitting.
+\label{sec:orgfd50efa}
+The data that was used for fine tuning after being pre-trained on either the AES or SAS datasets, there was no particular difference found between pre-training on the two datasets. The Tin Iodide, lab report dataset that was used for fine tuning contained only 100 samples, this means that the model was over-fitting to the training data significantly. Therefore, no accurate judgement can be made on the performance of the model. When evaluated on the training split, the model achieves an \(r^2\) value approaching 0.3, whereas when evaluated on the testing split, the model achieves \(r^2\) values of between -1 and 0, this significant difference implies severe overfitting.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=10cm]{./exp5_fine_dist_train.png}
-\caption{Prediced score against Human score on the training split of the Tin Iodide dataset, showing signs of severe overfitting \label{fig:overfit}}
+\caption{Predicted score against Human score on the training split of the Tin Iodide dataset, showing signs of severe overfitting \label{fig:overfit}}
 \end{figure}
 
 \begin{figure}[htbp]
@@ -222,12 +222,10 @@ The data that was used for fine tuning after being pre-trained on either the AES
 \caption{Predicted score against Human score on the testing split of the Tin Iodide dataset, achieving an \(r^2\) of \(0.03\), showing signs of overfitting to the training split}
 \end{figure}
 
-The most likely cause of this overfitting is the lack of training data available, it is possible that another cause could be the lack of variation in the training data, as is expected with real-world data, this dataset is very unbalanced with a large number of samples achieving approximately a score of 0.7 when rated by human markers.
-
-\newpage
+The most likely cause of this overfitting is the lack of training data available, it is possible that another cause could be the lack of variation in the training data, as is expected with real-world data, this dataset is very unbalanced with a large number of samples achieving approximately a score of 0.7 when scored by human markers, this would be very challenging to fix and may require similar approach to that used in classification metrics to adjust for imbalanced data.
 
 \section{Conclusion}
-\label{sec:org28ee607}
+\label{sec:org5fc8a37}
 The models created in this block (length: 2 weeks) have shown significant improvement over previous attempts using transformer models for AES and show significant promise using the Kaggle datasets as a pre-training method to create a pre-training framework specific to AES, allowing for fewer samples to be used when fine-tuning a model for a real-world application.
 
 The pre-training step is time-efficient as the model is able to achieve comparatively high performance in just over an hour of training (on \textbf{\textbf{either}} the Kaggle AES dataset \textbf{\textbf{or}} the Kaggle SAS dataset).
