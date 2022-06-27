@@ -125,7 +125,7 @@ def calculate_loss(curr_frac, outputs, labels, start, start_coeff, stdev_coeff, 
     return loss, stdev, rmse, r2, stdev_factor
 
 def train(model, epochs, train_df, device, batch_size, optimizer, eval_df=None, eval_during_training=True, log_wandb=True, is_transformer=False):
-    if eval_during_training and not eval_df:
+    if eval_during_training and eval_df != None:
         raise ValueError("No Eval dataloader supplied: disable 'eval_during_training' or supply 'eval_dataloader'")
 
     train_dataset = process_data(train_df, tokenizer)
