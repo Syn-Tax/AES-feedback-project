@@ -191,7 +191,7 @@ def evaluate(model, eval_df, tokenizer, device, batch_size, log_wandb=True, is_t
 
         if len(batch["input_ids"]) != batch_size:
             print("mismatched batches")
-            src_mask = src_mask[:batch_size, :batch_size]
+            src_mask = src_mask[:len(batch["input_ids"]), :len(batch["input_ids"])]
 
         with torch.no_grad():
             output = model(batch["input_ids"], src_mask)
