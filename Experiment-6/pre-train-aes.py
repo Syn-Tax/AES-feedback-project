@@ -124,8 +124,8 @@ def calculate_loss(curr_frac, outputs, labels, start, start_coeff, stdev_coeff, 
 
     return loss, stdev, rmse, r2, stdev_factor
 
-def train(model, epochs, train_df, device, batch_size, optimizer, eval_df=None, eval_during_training=True, log_wandb=True, is_transformer=False):
-    if eval_during_training and eval_df != None:
+def train(model, epochs, train_df, device, batch_size, optimizer, tokenizer, eval_df=None, eval_during_training=True, log_wandb=True, is_transformer=False):
+    if eval_during_training and eval_df.empty:
         raise ValueError("No Eval dataloader supplied: disable 'eval_during_training' or supply 'eval_dataloader'")
 
     train_dataset = process_data(train_df, tokenizer)
@@ -173,7 +173,7 @@ def train(model, epochs, train_df, device, batch_size, optimizer, eval_df=None, 
             progress_bar.update(1)
 
         if eval_during_training:
-            evaluate(model, eval_dataloader, device, batch_size, log_wandb=log_wandb, is_transformer=is_transformer)
+            evaluate(model, eval_dataloader, tokenizer, device, batch_size, log_wandb=log_wandb, is_transformer=is_transformer)
 
     return model
 
@@ -230,7 +230,7 @@ def train_model(technique=None):
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model.to(device)
 
-    model = train(model, wandb.config["epochs"], train_df, device, wandb.config["batch_size"], optimizer, eval_df=eval_df)
+    model = train(model, wandb.config["epochs"], train_df, device, wandb.config["batch_size"], optimizer, tokenizer, eval_df=eval_df)
 
     torch.save(model, f"models/model-{name}")
 
