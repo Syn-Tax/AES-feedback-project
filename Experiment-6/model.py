@@ -6,7 +6,7 @@ class Model(nn.Module):
     def __init__(self, output_size, d_model=512, nhead=8, num_encoder_layers=6):
         super().__init__()
 
-		self.output_size = output_size
+        self.output_size = output_size
         self.d_model = d_model
         self.nhead = nhead
         self.num_encoder_layers = num_encoder_layers
