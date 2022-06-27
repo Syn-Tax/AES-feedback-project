@@ -124,9 +124,12 @@ def calculate_loss(curr_frac, outputs, labels, start, start_coeff, stdev_coeff, 
 
     return loss, stdev, rmse, r2, stdev_factor
 
-def train(model, epochs, train_dataloader, device, batch_size, num_training_steps, optimizer, lr_scheduler, eval_dataloader=None, eval_during_training=True, log_wandb=True, is_transformer=False):
-    if eval_during_training and not eval_dataloader:
+def train(model, epochs, train_df, device, batch_size, num_training_steps, optimizer, lr_scheduler, eval_df=None, eval_during_training=True, log_wandb=True, is_transformer=False):
+    if eval_during_training and not eval_df:
         raise ValueError("No Eval dataloader supplied: disable 'eval_during_training' or supply 'eval_dataloader'")
+
+    train_dataset = process_data(train_df, tokenizer)
+    train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=False, batch_size=batch_size)
 
     src_mask = generate_square_subsequent_mask(batch_size).to(device)
 
@@ -172,7 +175,10 @@ def train(model, epochs, train_dataloader, device, batch_size, num_training_step
     return model
 
 
-def evaluate(model, eval_dataloader, device, batch_size, log_wandb=True, is_transformer=False):
+def evaluate(model, eval_df, tokenizer, device, batch_size, log_wandb=True, is_transformer=False):
+    eval_dataset = process_data(eval_df, tokenizer)
+    eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=False, batch_size=batch_size)
+
     src_mask = generate_square_subsequent_mask(batch_size).to(device)
     model.eval()
     output_logits = []
@@ -212,12 +218,6 @@ def train_model(technique=None):
 
     tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
 
-    train_dataset = process_data(train_df, tokenizer)
-    eval_dataset = process_data(eval_df, tokenizer)
-
-    train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=True, batch_size=wandb.config["batch_size"])
-    eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
-
     model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"], wandb.config["num_attention_heads"], wandb.config["num_encoder_layers"], 512, regression_size=wandb.config["regression_size"])
 
     is_transformer = False
@@ -230,7 +230,7 @@ def train_model(technique=None):
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model.to(device)
 
-    model = train(model, wandb.config["epochs"], train_dataloader, device, wandb.config["batch_size"], num_training_steps, optimizer, lr_scheduler, eval_dataloader=eval_dataloader)
+    model = train(model, wandb.config["epochs"], train_df, device, wandb.config["batch_size"], num_training_steps, optimizer, lr_scheduler, eval_df=eval_df)
 
     torch.save(model, f"models/model-{name}")
 
