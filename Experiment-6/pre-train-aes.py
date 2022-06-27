@@ -236,7 +236,7 @@ def train_model(technique=None):
 
     tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
 
-    model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"], wandb.config["num_attention_heads"], wandb.config["num_encoder_layers"], 512, regression_size=wandb.config["regression_size"])
+    model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"], wandb.config["num_attention_heads"], wandb.config["num_encoder_layers"], 512, regression_size=wandb.config["regression_size"], num_regression_layers=wandb.config["num_regression_layers"])
     count_parameters(model)
 
     #sys.exit(0)
@@ -270,6 +270,7 @@ if __name__ == "__main__":
         "num_attention_heads": 16,
         "num_encoder_layers": 6,
         "regression_size": 512,
+        "num_regression_layers": 0,
         "name": name,
         "stdev_coeff": 0.6,
         "stdev_start": 0.1,
