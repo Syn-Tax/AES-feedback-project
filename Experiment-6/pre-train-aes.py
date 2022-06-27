@@ -12,7 +12,7 @@ import wandb
 import os
 import tqdm
 import sys
-from model import Model
+from model import Model, generate_square_subsequent_mask
 
 name = "aes"
 
@@ -110,77 +110,55 @@ def compute_metrics(model_outputs, correct):
         "eval_stdev_error": stdev_err
     }
 
-def train(technique=None):
-    if technique:
-        train_df, eval_df = load_data(f"datasets/{name}/data_{technique}.csv")
+def calculate_loss(curr_frac, outputs, labels, start, start_coeff, stdev_coeff, r2_coeff):
+    rmse = rmse_loss(outputs, labels)
+    stdev = stdev_error(outputs, labels)
+    r2 = r2_loss(outputs, labels)
+
+    if curr_frac < start:
+        stdev_factor = start_coeff
     else:
-        train_df, eval_df = load_data(f"datasets/{name}/data.csv")
+        stdev_factor = start_coeff * math.exp(-stdev_coeff*(curr_frac - start))
 
-    tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
+    loss = ((1-stdev_factor)*(rmse+r2*r2_coeff)) + (stdev_factor * stdev)
 
-    train_dataset = process_data(train_df, tokenizer)
-    eval_dataset = process_data(eval_df, tokenizer)
+    return loss, stdev, rmse, r2, stdev_factor
 
-    train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=True, batch_size=wandb.config["batch_size"])
-    eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
+def train(model, epochs, train_dataloader, device, batch_size, num_training_steps, optimizer, lr_scheduler, eval_dataloader=None, eval_during_training=True, log_wandb=True, is_transformer=False):
+    if eval_during_training and not eval_dataloader:
+        raise ValueError("No Eval dataloader supplied: disable 'eval_during_training' or supply 'eval_dataloader'")
 
-    # bert_config = transformers.BertConfig.from_pretrained(
-    #     "bert-base-uncased",
-    #     vocab_size=tokenizer.vocab_size,
-    #     hidden_size=wandb.config["hidden_size"],
-    #     num_hidden_layers=wandb.config["num_hidden_layers"],
-    #     num_attention_heads=wandb.config["num_attention_heads"],
-    #     intermediate_size=wandb.config["intermediate_size"],
-    #     hidden_act=wandb.config["hidden_act"],
-    #     hidden_dropout_prob=wandb.config["hidden_dropout_prob"],
-    #     attention_probs_dropout_prob=wandb.config["attention_probs_dropout_prob"],
-    #     classifier_dropout=wandb.config["classifier_dropout"]
-    # )
+    src_mask = generate_square_subsequent_mask(batch_size)
 
-    # model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
-    #model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-tiny", num_labels=1)
-    #model = transformers.BertForSequenceClassification.from_pretrained("bert-base-uncased", config=bert_config)
-    model = Model(1)
-
-    is_transformer = False
-
-    optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
-
-    num_training_steps = len(train_dataloader)*wandb.config["epochs"]
-    lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
-
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    model.to(device)
-
-
-    for epoch in range(wandb.config["epochs"]):
+    for epoch in range(epochs):
         print(f"############## EPOCH: {epoch} ################")
         model.train()
         progress_bar = tqdm.auto.tqdm(range(len(train_dataloader)))
         for i, batch in enumerate(train_dataloader):
+
             batch = {k: v.to(device) for k, v in batch.items()}
-            output = model(batch["input_ids"])
-            sys.exit(0)
+
+            if len(batch["input_ids"]) != batch_size:
+                src_mask = src_mask[:batch_size, :batch_size]
+
+            output = model(batch["input_ids"], src_mask)
+
             if is_transformer:
                 outputs = output.logits
             else:
                 outputs = output
 
-            rmse = rmse_loss(outputs, batch["labels"])
-            stdev = stdev_error(outputs, batch["labels"])
-            r2 = r2_loss(outputs, batch["labels"])
+            print(outputs)
 
             curr_step = epoch * len(train_dataloader) + i
             curr_frac = curr_step / num_training_steps
 
-            if curr_frac < wandb.config["stdev_start"]:
-                stdev_factor = wandb.config["stdev_start_coeff"]
-            else:
-                stdev_factor = wandb.config["stdev_start_coeff"]*math.exp(-wandb.config["stdev_coeff"]*(curr_frac - wandb.config["stdev_start"]))
-
-
-            #loss = mse + ((wandb.config["epochs"]/(epoch+1))*stdev)
-            loss = ((1-stdev_factor)*(rmse+r2*wandb.config["r2_coeff"])) + (stdev_factor * stdev)
+            loss, stdev, rmse, r2, stdev_factor = calculate_loss(curr_frac,
+                                  outputs, batch["labels"],
+                                  wandb.config["stdev_start"],
+                                  wandb.config["stdev_start_coeff"],
+                                  wandb.config["stdev_coeff"],
+                                  wandb.config["r2_coeff"])
             loss.backward()
 
             wandb.log({"train_loss": loss, "train_stdev": stdev, "train_rmse": rmse, "train_r2": r2, "stdev_factor": stdev_factor})
@@ -190,41 +168,25 @@ def train(technique=None):
             lr_scheduler.step()
             progress_bar.update(1)
 
-        model.eval()
-        output_logits = []
-        output_labels = []
-        for batch in eval_dataloader:
-            batch = {k: v.to(device) for k, v in batch.items()}
+        if eval_during_training:
+            evaluate(model, eval_dataloader, device, batch_size, log_wandb=log_wandb, is_transformer=is_transformer)
 
-            with torch.no_grad():
-                output = model(batch["input_ids"])
-
-            if is_transformer:
-                outputs = output.logits
-            else:
-                outputs = output
-
-            logits = [float(logit) for logit in outputs]
-            [output_logits.append(logit) for logit in logits]
-            [output_labels.append(float(label)) for label in batch["labels"]]
-
-        metrics = compute_metrics(output_logits, output_labels)
-        print(metrics)
-        wandb.log(metrics)
-
-    torch.save(model, f"/content/drive/MyDrive/AES-feedback-project/Experiment-5/models/model-{name}.pt")
+    return model
 
 
-    print("Final Evaluation")
-
+def evaluate(model, eval_dataloader, device, batch_size, log_wandb=True, is_transformer=False):
+    src_mask = generate_square_subsequent_mask(batch_size)
     model.eval()
     output_logits = []
     output_labels = []
     for batch in eval_dataloader:
         batch = {k: v.to(device) for k, v in batch.items()}
 
+        if len(batch["input_ids"]) != batch_size:
+            src_mask = src_mask[:batch_size, :batch_size]
+
         with torch.no_grad():
-            output = model(batch["input_ids"])
+            output = model(batch["input_ids"], src_mask)
 
         if is_transformer:
             outputs = output.logits
@@ -242,23 +204,56 @@ def train(technique=None):
     output_df = pd.DataFrame(list(zip(list(eval_df["text"]), output_logits, output_labels)))
     output_df.columns = ["text", "prediction", "true"]
 
-    output_df.to_csv(f"/content/drive/MyDrive/AES-feedback-project/Experiment-5/results-aes-self_attention.csv", index=False)
+    return output_df
+
+def train_model(technique=None):
+    if technique:
+        train_df, eval_df = load_data(f"datasets/{name}/data_{technique}.csv")
+    else:
+        train_df, eval_df = load_data(f"datasets/{name}/data.csv")
+
+    tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
+
+    train_dataset = process_data(train_df, tokenizer)
+    eval_dataset = process_data(eval_df, tokenizer)
+
+    train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=True, batch_size=wandb.config["batch_size"])
+    eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=True, batch_size=wandb.config["batch_size"])
+
+    model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"], wandb.config["num_attention_heads"], wandb.config["num_encoder_layers"], 512, regression_size=wandb.config["regression_size"])
+
+    is_transformer = False
+
+    optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
+
+    num_training_steps = len(train_dataloader)*wandb.config["epochs"]
+    lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
+
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    model.to(device)
+
+    model = train(model, wandb.config["epochs"], train_dataloader, device, wandb.config["batch_size"], num_training_steps, optimizer, lr_scheduler, eval_dataloader=eval_dataloader)
+
+    torch.save(model, f"models/model-{name}")
+
+
+    print("Final Evaluation")
+
+    # output_df = evaluate(model, eval_dataloader, device)
+
+    # output_df.to_csv(f"results-aes-self_attention.csv", index=False)
 
 
 if __name__ == "__main__":
     config = {
         "batch_size": 64,
-        "epochs": 75,
+        "epochs": 50,
         "lr":1e-4,
-        "hidden_size": 512,
+        "hidden_size": 64,
         "embedding_length": 128,
-        # "num_hidden_layers": 8,
-        # "num_attention_heads": 8,
-        # "intermediate_size": 2048,
-        # "hidden_act": "gelu",
-        # "hidden_dropout_prob": 0.1,
-        # "attention_probs_dropout_prob": 0.1,
-        # "classifier_dropout": None,
+        "num_attention_heads": 8,
+        "num_encoder_layers": 6,
+        "regression_size": 256,
         "name": name,
         "stdev_coeff": 0.6,
         "stdev_start": 0.1,
@@ -266,10 +261,7 @@ if __name__ == "__main__":
         "r2_coeff": 0.0007
     }
 
-    try:
-        technique = sys.argv[1]
-        run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-small-prompt3-msestd", config=config)
-        train(technique=technique)
-        run.finish()
-    except:
-        raise Exception("Provide a valid normalisation technique")
+    technique = "min_max"
+    run = wandb.init(project="AES-Experiment-5", name=f"{name}-{technique}-small-prompt3-msestd", config=config)
+    train_model(technique=technique)
+    run.finish()
