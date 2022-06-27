@@ -16,6 +16,20 @@ from model import Model, generate_square_subsequent_mask
 
 name = "aes"
 
+from prettytable import PrettyTable
+
+def count_parameters(model):
+    table = PrettyTable(["Modules", "Parameters"])
+    total_params = 0
+    for name, parameter in model.named_parameters():
+        if not parameter.requires_grad: continue
+        params = parameter.numel()
+        table.add_row([name, params])
+        total_params+=params
+    print(table)
+    print(f"Total Trainable Params: {round(total_params/1000000, 1)}M")
+    return total_params
+
 class Dataset(torch.utils.data.Dataset):
     def __init__(self, encodings, labels):
         self.encodings = encodings
@@ -223,6 +237,9 @@ def train_model(technique=None):
     tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
 
     model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"], wandb.config["num_attention_heads"], wandb.config["num_encoder_layers"], 512, regression_size=wandb.config["regression_size"])
+    count_parameters(model)
+
+    sys.exit(0)
 
     is_transformer = False
 
@@ -248,11 +265,11 @@ if __name__ == "__main__":
         "batch_size": 64,
         "epochs": 50,
         "lr":1e-4,
-        "hidden_size": 64,
-        "embedding_length": 128,
-        "num_attention_heads": 8,
-        "num_encoder_layers": 6,
-        "regression_size": 256,
+        "hidden_size": 2048,
+        "embedding_length": 256,
+        "num_attention_heads": 16,
+        "num_encoder_layers": 8,
+        "regression_size": 512,
         "name": name,
         "stdev_coeff": 0.6,
         "stdev_start": 0.1,
