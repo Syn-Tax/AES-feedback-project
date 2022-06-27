@@ -131,6 +131,9 @@ def train(model, epochs, train_df, device, batch_size, num_training_steps, optim
     train_dataset = process_data(train_df, tokenizer)
     train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=False, batch_size=batch_size)
 
+    num_training_steps = len(train_dataloader)*wandb.config["epochs"]
+    lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
+
     src_mask = generate_square_subsequent_mask(batch_size).to(device)
 
     for epoch in range(epochs):
@@ -223,9 +226,6 @@ def train_model(technique=None):
     is_transformer = False
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=wandb.config["lr"])
-
-    num_training_steps = len(train_dataloader)*wandb.config["epochs"]
-    lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
 
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
     model.to(device)
