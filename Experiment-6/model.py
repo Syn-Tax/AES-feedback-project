@@ -7,3 +7,4 @@ class MultiHeadAttention(nn.Module):
 
 		self.output_size = output_size
 		self.vocab_size = vocab_size
+        self.embedding_length = embedding_length

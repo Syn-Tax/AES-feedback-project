@@ -137,7 +137,7 @@ def train(technique=None):
     #     classifier_dropout=wandb.config["classifier_dropout"]
     # )
 
-    model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
+    # model = SelfAttention(wandb.config["batch_size"], 1, wandb.config["hidden_size"], tokenizer.vocab_size, wandb.config["embedding_length"])
     #model = transformers.AutoModelForSequenceClassification.from_pretrained("prajjwal1/bert-tiny", num_labels=1)
     #model = transformers.BertForSequenceClassification.from_pretrained("bert-base-uncased", config=bert_config)
 
@@ -158,6 +158,8 @@ def train(technique=None):
         progress_bar = tqdm.auto.tqdm(range(len(train_dataloader)))
         for i, batch in enumerate(train_dataloader):
             batch = {k: v.to(device) for k, v in batch.items()}
+            print(batch)
+            sys.exit(0)
             output = model(batch["input_ids"])
             if is_transformer:
                 outputs = output.logits
