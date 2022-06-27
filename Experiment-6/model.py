@@ -88,7 +88,7 @@ class RegressionHead(nn.Module):
             fc.bias.data.zero_()
             fc.weight.data.uniform_(-initrange, initrange)
 
-    def forward(self, hidden_vector):
+    def forward(self, hidden_matrix):
         output = self.input_fc(hidden_matrix.view(-1, self.embedding_length*self.seq_len))
 
         for fc in self.hidden_fcs:
