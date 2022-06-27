@@ -64,7 +64,7 @@ class PositionalEncoding(nn.Module):
         return self.dropout(x)
 
 class RegressionHead(nn.Module):
-    def __init__(self, embedding_length, seq_len, hidden_size=512, num_hidden_layers=1):
+    def __init__(self, embedding_length, seq_len, hidden_size=512, num_hidden_layers=0):
         super().__init__()
 
         self.embedding_length = embedding_length
