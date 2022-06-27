@@ -89,7 +89,7 @@ class RegressionHead(nn.Module):
             fc.weight.data.uniform_(-initrange, initrange)
 
     def forward(self, hidden_vector):
-        output = input_fc(hidden_matrix.view(-1, self.embedding_length*self.seq_len))
+        output = self.input_fc(hidden_matrix.view(-1, self.embedding_length*self.seq_len))
 
         for fc in self.hidden_fcs:
             output = fc(output)
