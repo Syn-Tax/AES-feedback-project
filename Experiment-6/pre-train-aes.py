@@ -128,7 +128,7 @@ def train(model, epochs, train_dataloader, device, batch_size, num_training_step
     if eval_during_training and not eval_dataloader:
         raise ValueError("No Eval dataloader supplied: disable 'eval_during_training' or supply 'eval_dataloader'")
 
-    src_mask = generate_square_subsequent_mask(batch_size)
+    src_mask = generate_square_subsequent_mask(batch_size).to(device)
 
     for epoch in range(epochs):
         print(f"############## EPOCH: {epoch} ################")
@@ -175,7 +175,7 @@ def train(model, epochs, train_dataloader, device, batch_size, num_training_step
 
 
 def evaluate(model, eval_dataloader, device, batch_size, log_wandb=True, is_transformer=False):
-    src_mask = generate_square_subsequent_mask(batch_size)
+    src_mask = generate_square_subsequent_mask(batch_size).to(device)
     model.eval()
     output_logits = []
     output_labels = []
