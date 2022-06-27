@@ -173,7 +173,7 @@ def train(model, epochs, train_df, device, batch_size, optimizer, tokenizer, eva
             progress_bar.update(1)
 
         if eval_during_training:
-            evaluate(model, eval_dataloader, tokenizer, device, batch_size, log_wandb=log_wandb, is_transformer=is_transformer)
+            evaluate(model, eval_df, tokenizer, device, batch_size, log_wandb=log_wandb, is_transformer=is_transformer)
 
     return model
 
