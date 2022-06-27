@@ -148,8 +148,6 @@ def train(model, epochs, train_dataloader, device, batch_size, num_training_step
             else:
                 outputs = output
 
-            print(outputs)
-
             curr_step = epoch * len(train_dataloader) + i
             curr_frac = curr_step / num_training_steps
 
