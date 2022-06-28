@@ -172,7 +172,7 @@ def train(model, epochs, train_df, device, batch_size, optimizer, tokenizer, eva
     train_dataset = process_data(train_df, tokenizer)
     train_dataloader = torch.utils.data.DataLoader(train_dataset, shuffle=True, drop_last=False, batch_size=batch_size)
 
-    num_training_steps = len(train_dataloader)*wandb.config["epochs"]
+    num_training_steps = len(train_dataloader)*epochs
     lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
 
     for epoch in range(epochs):
