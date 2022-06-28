@@ -18,7 +18,7 @@ from model import Model
 name = "pre-train"
 
 argparser = argparse.ArgumentParser()
-argparser.add_argument("--batch-size", "-b", help="Training batch size", default=16, type=int)
+argparser.add_argument("--batch-size", "-b", help="Training batch size", default=32, type=int)
 argparser.add_argument("--epochs", "-e", help="Number of training epochs", default=1, type=int)
 argparser.add_argument("--lr", help="Learning Rate", default=1e-4, type=float)
 argparser.add_argument("--hidden", help="Transformer hidden size", default=512, type=int)
