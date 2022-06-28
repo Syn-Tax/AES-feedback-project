@@ -277,7 +277,7 @@ def train_model(technique=None):
 
 
 if __name__ == "__main__":
-    args = argparser.parse_args()
+    args = vars(argparser.parse_args())
     config = {
         "batch_size": args["batch_size"],
         "epochs": args["epochs"],
