@@ -18,7 +18,7 @@ class Model(nn.Module):
 
 		"""
 
-		self.output_size = output_size
+		self.output_size = 1
 		self.hidden_size = hidden_size
 		self.vocab_size = vocab_size
 		self.embedding_length = embedding_length
