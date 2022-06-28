@@ -163,8 +163,6 @@ def train(model, epochs, train_df, device, batch_size, optimizer, tokenizer, eva
     num_training_steps = len(train_dataloader)*wandb.config["epochs"]
     lr_scheduler = torch.optim.lr_scheduler.LinearLR(optimizer)
 
-    src_mask = generate_square_subsequent_mask(batch_size).to(device)
-
     for epoch in range(epochs):
         print(f"############## EPOCH: {epoch} ################")
         model.train()
@@ -173,10 +171,7 @@ def train(model, epochs, train_df, device, batch_size, optimizer, tokenizer, eva
 
             batch = {k: v.to(device) for k, v in batch.items()}
 
-            if len(batch["input_ids"]) != batch_size:
-                src_mask = src_mask[:batch_size, :batch_size]
-
-            output = model(batch["input_ids"], src_mask)
+            output = model(batch["input_ids"], len(batch["input_ids"]))
 
             if is_transformer:
                 outputs = output.logits
@@ -211,19 +206,14 @@ def evaluate(model, eval_df, tokenizer, device, batch_size, log_wandb=True, is_t
     eval_dataset = process_data(eval_df, tokenizer)
     eval_dataloader = torch.utils.data.DataLoader(eval_dataset, drop_last=False, batch_size=batch_size)
 
-    src_mask = generate_square_subsequent_mask(batch_size).to(device)
     model.eval()
     output_logits = []
     output_labels = []
     for batch in eval_dataloader:
         batch = {k: v.to(device) for k, v in batch.items()}
 
-        if len(batch["input_ids"]) != batch_size:
-            print("mismatched batches")
-            src_mask = src_mask[:len(batch["input_ids"]), :len(batch["input_ids"])]
-
         with torch.no_grad():
-            output = model(batch["input_ids"], src_mask)
+            output = model(batch["input_ids"], len(batch["input_ids"]))
 
         if is_transformer:
             outputs = output.logits
@@ -251,7 +241,7 @@ def train_model(technique=None):
 
     tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
 
-    model = Model(wandb.config["batch_size"], tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"])
+    model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"])
     count_parameters(model)
 
     #sys.exit(0)
