@@ -102,8 +102,8 @@ def load_data(path, eval_frac=0.1):
     pre_eval_df = df.iloc[:int(df.shape[0]*eval_frac)]
     pre_eval_df.columns = ["text", "labels"]
 
-    pre_train_df = train_df.reset_index(drop=True)
-    pre_eval_df = eval_df.reset_index(drop=True)
+    pre_train_df = pre_train_df.reset_index(drop=True)
+    pre_eval_df = pre_eval_df.reset_index(drop=True)
 
     final_train_df = fine_df.iloc[int(df.shape[0]*eval_frac):]
     final_train_df.columns = ["text", "labels"]
@@ -111,8 +111,8 @@ def load_data(path, eval_frac=0.1):
     final_eval_df = fine_df.iloc[:int(df.shape[0]*eval_frac)]
     final_eval_df.columns = ["text", "labels"]
 
-    final_train_df = train_df.reset_index(drop=True)
-    final_eval_df = eval_df.reset_index(drop=True)
+    final_train_df = final_train_df.reset_index(drop=True)
+    final_eval_df = final_eval_df.reset_index(drop=True)
 
     return pre_train_df, pre_eval_df, final_train_df, final_eval_df
 
