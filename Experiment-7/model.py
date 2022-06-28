@@ -23,13 +23,13 @@ class Model(nn.Module):
 		self.vocab_size = vocab_size
 		self.embedding_length = embedding_length
 
-		self.word_embeddings = nn.Embedding(vocab_size, embedding_length)
+		self.word_embeddings = nn.Embedding(self.vocab_size, self.embedding_length)
 		self.dropout = 0.8
-		self.bilstm = nn.LSTM(embedding_length, hidden_size, dropout=self.dropout, bidirectional=True)
+		self.bilstm = nn.LSTM(self.embedding_length, self.hidden_size, dropout=self.dropout, bidirectional=True)
 		self.W_s1 = nn.Linear(2*hidden_size, 350)
 		self.W_s2 = nn.Linear(350, 30)
 
-		self.label = nn.Linear(30*2*hidden_size, output_size)
+		self.label = nn.Linear(30*2*hidden_size, self.output_size)
 
 	def attention_net(self, lstm_output):
 
