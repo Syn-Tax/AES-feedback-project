@@ -23,7 +23,7 @@ argparser.add_argument("--epochs", "-e", help="Number of training epochs", defau
 argparser.add_argument("--lr", help="Learning Rate", default=1e-4, type=float)
 argparser.add_argument("--hidden", help="Transformer hidden size", default=1024, type=int)
 argparser.add_argument("--embedding", help="Transformer embedding length", default=128, type=int)
-hrgparser.add_argument("--stdev-coeff", help="stardard deviation coefficient", default=0.6, type=float)
+argparser.add_argument("--stdev-coeff", help="stardard deviation coefficient", default=0.6, type=float)
 argparser.add_argument("--stdev-start", help="standard deviation starting fraction", default=0.2, type=float)
 argparser.add_argument("--stdev-start-coeff", help="starting coefficient of standard deviation", default=1.0, type=float)
 argparser.add_argument("--r2-coeff", help="coefficient of r2", default=0.0007, type=float)
