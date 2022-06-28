@@ -5,7 +5,7 @@ from torch.nn import functional as F
 
 class Model(nn.Module):
 	def __init__(self, vocab_size, embedding_length, hidden_size):
-		super(SelfAttention, self).__init__()
+		super().__init__()
 
 		"""
 		Arguments
