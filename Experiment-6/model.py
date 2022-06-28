@@ -4,7 +4,7 @@ import math
 import sys
 
 class Model(nn.Module):
-    def __init__(self, vocab_size, embedding_length, hidden_size, nhead, num_encoder_layers, seq_len, dropout=0.1,
+    def __init__(self, vocab_size, embedding_length, hidden_size, nhead, num_encoder_layers, seq_len, dropout=0.6,
                  regression_size=256, num_regression_layers=1):
         super().__init__()
 
