@@ -24,7 +24,7 @@ class Model(nn.Module):
 
         self.regression_head = RegressionHead(embedding_length, seq_len, hidden_size=regression_size, num_hidden_layers=num_regression_layers)
 
-        self.init_weights()
+        #self.init_weights()
 
     def init_weights(self):
         initrange = 0.1
@@ -75,7 +75,7 @@ class RegressionHead(nn.Module):
         self.hidden_fcs = [nn.Linear(hidden_size, hidden_size) for _ in range(num_hidden_layers)]
         self.output_fc = nn.Linear(hidden_size, 1)
 
-        self.init_weights()
+        #self.init_weights()
 
     def init_weights(self):
         initrange = 0.1
@@ -94,6 +94,6 @@ class RegressionHead(nn.Module):
         for fc in self.hidden_fcs:
             output = fc(output)
 
-        output = self.output_fc(output)
+        output = nn.Sigmoid()(self.output_fc(output))
 
         return output

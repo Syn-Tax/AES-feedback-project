@@ -12,9 +12,25 @@ import wandb
 import os
 import tqdm
 import sys
+import argparse
 from model import Model, generate_square_subsequent_mask
 
 name = "aes"
+
+argparser = argparse.ArgumentParser()
+argparser.add_argument("--batch-size", "-b", help="Training batch size", default=16, type=int)
+argparser.add_argument("--epochs", "-e", help="Number of training epochs", default=1, type=int)
+argparser.add_argument("--lr", help="Learning Rate", default=1e-4, type=float)
+argparser.add_argument("--hidden", help="Transformer hidden size", default=1024, type=int)
+argparser.add_argument("--embedding", help="Transformer embedding length", default=128, type=int)
+argparser.add_argument("--nhead", help="Number of Transformer attention heads", default=8, type=int)
+argparser.add_argument("--nencoder", help="Number of Transformer encoder layers", default=6, type=int)
+argparser.add_argument("--rsize", help="Size of hidden Regression layers", default=512, type=int)
+argparser.add_argument("--nregression", help="Number of hidden Regression layers", default=0, type=int)
+argparser.add_argument("--stdev-coeff", help="stardard deviation coefficient", default=0.6, type=float)
+argparser.add_argument("--stdev-start", help="standard deviation starting fraction", default=0.2, type=float)
+argparser.add_argument("--stdev-start-coeff", help="starting coefficient of standard deviation", default=1.0, type=float)
+argparser.add_argument("--r2-coeff", help="coefficient of r2", default=0.0007, type=float)
 
 from prettytable import PrettyTable
 
@@ -261,21 +277,22 @@ def train_model(technique=None):
 
 
 if __name__ == "__main__":
+    args = argparser.parse_args()
     config = {
-        "batch_size": 64,
-        "epochs": 50,
-        "lr":1e-4,
-        "hidden_size": 1024,
-        "embedding_length": 128,
-        "num_attention_heads": 16,
-        "num_encoder_layers": 6,
-        "regression_size": 512,
-        "num_regression_layers": 0,
+        "batch_size": args["batch_size"],
+        "epochs": args["epochs"],
+        "lr": args["lr"],
+        "hidden_size": args["hidden"],
+        "embedding_length": args["embedding"],
+        "num_attention_heads": args["nhead"],
+        "num_encoder_layers": args["nencoder"],
+        "regression_size": args["rsize"],
+        "num_regression_layers": args["nregression"],
         "name": name,
-        "stdev_coeff": 0.6,
-        "stdev_start": 0.1,
-        "stdev_start_coeff": 1,
-        "r2_coeff": 0.0007
+        "stdev_coeff": args["stdev_coeff"],
+        "stdev_start": args["stdev_start"],
+        "stdev_start_coeff": args["stdev_start_coeff"],
+        "r2_coeff": args["r2_coeff"]
     }
 
     technique = "min_max"
