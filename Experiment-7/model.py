@@ -65,8 +65,8 @@ class Model(nn.Module):
 
 		input = self.word_embeddings(input_sentences)
 		input = input.permute(1, 0, 2)
-		h_0 = Variable(torch.zeros(2, self.batch_size, self.hidden_size).cuda())
-		c_0 = Variable(torch.zeros(2, self.batch_size, self.hidden_size).cuda())
+		h_0 = Variable(torch.zeros(2, batch_size, self.hidden_size).cuda())
+		c_0 = Variable(torch.zeros(2, batch_size, self.hidden_size).cuda())
 
 		output, (h_n, c_n) = self.bilstm(input, (h_0, c_0))
 		output = output.permute(1, 0, 2)
