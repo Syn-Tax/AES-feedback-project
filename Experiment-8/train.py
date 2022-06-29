@@ -183,6 +183,8 @@ def train(model, epochs, train_df, device, batch_size, optimizer, tokenizer, eva
 
             batch = {k: v.to(device) for k, v in batch.items()}
 
+            print(batch)
+
             output = model(batch["input_ids"], len(batch["input_ids"]))
 
             if is_transformer:
@@ -265,6 +267,8 @@ def train_model(technique=None):
     model = train(model, wandb.config["pre-epochs"], pre_train_df, device, wandb.config["pre-batch_size"], optimizer, tokenizer, eval_df=pre_eval_df)
 
     torch.save(model, f"models/model-{name}-pretrained.pt")
+
+    print(final_train_df)
 
     model = train(model, wandb.config["final-epochs"], final_train_df, device, wandb.config["final-batch_size"], optimizer, tokenizer, eval_df=final_eval_df)
 
