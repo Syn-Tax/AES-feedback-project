@@ -272,7 +272,7 @@ def train_model(technique=None):
 
     print("Final Evaluation")
 
-    output_df = evaluate(model, final_eval_df, device)
+    output_df = evaluate(model, final_eval_df, tokenizer, device, wandb.config["final-batch_size"])
 
     output_df.to_csv(f"results-aes-self_attention.csv", index=False)
 
