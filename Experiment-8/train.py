@@ -114,6 +114,8 @@ def load_data(path, eval_frac=0.1):
     final_train_df = final_train_df.reset_index(drop=True)
     final_eval_df = final_eval_df.reset_index(drop=True)
 
+    print(final_train_df)
+
     return pre_train_df, pre_eval_df, final_train_df, final_eval_df
 
 def process_data(df, tokenizer):
