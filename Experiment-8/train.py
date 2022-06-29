@@ -187,6 +187,10 @@ def train(model, epochs, train_df, device, batch_size, optimizer, tokenizer, eva
 
             output = model(batch["input_ids"], len(batch["input_ids"]))
 
+            optimizer.step()
+            optimizer.zero_grad()
+            lr_scheduler.step()
+
             if is_transformer:
                 outputs = output.logits
             else:
@@ -205,9 +209,6 @@ def train(model, epochs, train_df, device, batch_size, optimizer, tokenizer, eva
 
             wandb.log({"train_loss": loss, "train_stdev": stdev, "train_rmse": rmse, "train_r2": r2, "stdev_factor": stdev_factor})
 
-            optimizer.step()
-            optimizer.zero_grad()
-            lr_scheduler.step()
             progress_bar.update(1)
 
         if eval_during_training:
