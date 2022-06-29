@@ -76,4 +76,6 @@ class Model(nn.Module):
 
 		logits = torch.sigmoid(self.label(hidden_matrix.view(-1, hidden_matrix.size()[1]*hidden_matrix.size()[2])))
 
+		print(logits)
+
 		return logits
