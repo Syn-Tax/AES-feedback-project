@@ -69,19 +69,12 @@ class Model(nn.Module):
 		h_0 = Variable(torch.zeros(2, batch_size, self.hidden_size).cuda())
 		c_0 = Variable(torch.zeros(2, batch_size, self.hidden_size).cuda())
 
-
 		output, (h_n, c_n) = self.bilstm(input, (h_0, c_0))
 		output = output.permute(1, 0, 2)
-
-		print(output)
-		print(h_n)
 
 		attn_weight_matrix = self.attention_net(output)
 		hidden_matrix = torch.bmm(attn_weight_matrix, output)
 
-
 		logits = torch.sigmoid(self.label(hidden_matrix.view(-1, hidden_matrix.size()[1]*hidden_matrix.size()[2])))
-
-		print(logits)
 
 		return logits
