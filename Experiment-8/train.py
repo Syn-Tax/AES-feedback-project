@@ -233,6 +233,7 @@ def evaluate(model, eval_df, tokenizer, device, batch_size, log_wandb=True, is_t
             outputs = output.logits
         else:
             outputs = output
+        print(outputs)
 
         logits = [float(logit) for logit in outputs]
         [output_logits.append(logit) for logit in logits]
