@@ -74,6 +74,8 @@ class Model(nn.Module):
 		attn_weight_matrix = self.attention_net(output)
 		hidden_matrix = torch.bmm(attn_weight_matrix, output)
 
+		print(hidden_matrix)
+
 		logits = torch.sigmoid(self.label(hidden_matrix.view(-1, hidden_matrix.size()[1]*hidden_matrix.size()[2])))
 
 		print(logits)
