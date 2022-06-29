@@ -63,8 +63,9 @@ class Model(nn.Module):
 
 		"""
 
+		print(input_sentences)
+
 		input = self.word_embeddings(input_sentences)
-		print(input)
 		input = input.permute(1, 0, 2)
 		h_0 = Variable(torch.zeros(2, batch_size, self.hidden_size).cuda())
 		c_0 = Variable(torch.zeros(2, batch_size, self.hidden_size).cuda())
