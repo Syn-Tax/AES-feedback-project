@@ -64,6 +64,7 @@ class Model(nn.Module):
 		"""
 
 		input = self.word_embeddings(input_sentences)
+		print(input)
 		input = input.permute(1, 0, 2)
 		h_0 = Variable(torch.zeros(2, batch_size, self.hidden_size).cuda())
 		c_0 = Variable(torch.zeros(2, batch_size, self.hidden_size).cuda())
@@ -74,7 +75,6 @@ class Model(nn.Module):
 		attn_weight_matrix = self.attention_net(output)
 		hidden_matrix = torch.bmm(attn_weight_matrix, output)
 
-		print(hidden_matrix)
 
 		logits = torch.sigmoid(self.label(hidden_matrix.view(-1, hidden_matrix.size()[1]*hidden_matrix.size()[2])))
 
