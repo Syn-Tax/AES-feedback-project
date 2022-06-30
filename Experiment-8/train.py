@@ -29,6 +29,7 @@ argparser.add_argument("--stdev-coeff", help="stardard deviation coefficient", d
 argparser.add_argument("--stdev-start", help="standard deviation starting fraction", default=0.2, type=float)
 argparser.add_argument("--stdev-start-coeff", help="starting coefficient of standard deviation", default=1.0, type=float)
 argparser.add_argument("--r2-coeff", help="coefficient of r2", default=0.0007, type=float)
+argparser.add_argument("--path", help="path to model file", type=str)
 
 from prettytable import PrettyTable
 
@@ -247,7 +248,7 @@ def evaluate(model, eval_df, tokenizer, device, batch_size, log_wandb=True, is_t
 
     return output_df
 
-def train_model(technique=None):
+def train_model(args,technique=None):
     pre_train_df, pre_eval_df, final_train_df, final_eval_df = load_data(f"datasets/{name}/data.csv")
 
     tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
@@ -257,7 +258,11 @@ def train_model(technique=None):
     process_data(pre_eval_df, tokenizer)
     process_data(final_eval_df, tokenizer)
 
-    model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"])
+    if args["path"]:
+        model = torch.load(args["path"])
+    else:
+        model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"])
+
     count_parameters(model)
 
     #sys.exit(0)
@@ -302,5 +307,5 @@ if __name__ == "__main__":
 
     technique = "min_max"
     run = wandb.init(project="AES-Experiment-7", config=config)
-    train_model(technique=technique)
+    train_model(args, technique=technique)
     run.finish()
