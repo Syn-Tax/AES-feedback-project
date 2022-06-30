@@ -257,7 +257,7 @@ def train_model(technique=None):
     process_data(pre_eval_df, tokenizer)
     process_data(final_eval_df, tokenizer)
 
-    model = Model(len(tokenizer), wandb.config["embedding_length"], wandb.config["hidden_size"])
+    model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"])
     count_parameters(model)
 
     #sys.exit(0)
