@@ -93,7 +93,7 @@ def load_data(paths, eval_frac=0.15):
     dfs = [pd.read_csv(path) for path in paths]
 
 
-    df = pd.concat([dfs], ignore_index=True)
+    df = pd.concat(dfs, ignore_index=True)
 
     df = df.sample(frac=1).reset_index(drop=True)
 
