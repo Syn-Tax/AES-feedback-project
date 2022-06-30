@@ -103,8 +103,8 @@ def load_data(paths, eval_frac=0.15):
     eval_df = df.iloc[:int(df.shape[0]*eval_frac)]
     eval_df.columns = ["text", "labels"]
 
-    train_df = pre_train_df.reset_index(drop=True)
-    eval_df = pre_eval_df.reset_index(drop=True)
+    train_df = train_df.reset_index(drop=True)
+    eval_df = eval_df.reset_index(drop=True)
 
     return train_df, eval_df
 
