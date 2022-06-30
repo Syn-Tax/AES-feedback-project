@@ -134,7 +134,6 @@ def process_data(df, tokenizer):
     return dataset
 
 def compute_metrics(model_outputs, correct):
-    print(model_outputs, correct)
     max_error = metrics.max_error(correct, model_outputs)
     mse = metrics.mean_squared_error(correct, model_outputs)
     mae = metrics.mean_absolute_error(correct, model_outputs)
@@ -234,7 +233,6 @@ def evaluate(model, eval_df, tokenizer, device, batch_size, log_wandb=True, is_t
             outputs = output.logits
         else:
             outputs = output
-        print(output)
 
         logits = [float(logit) for logit in outputs]
         [output_logits.append(logit) for logit in logits]
