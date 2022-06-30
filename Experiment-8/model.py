@@ -65,6 +65,7 @@ class Model(nn.Module):
 
 
 		input = self.word_embeddings(input_sentences)
+		print(input)
 		input = input.permute(1, 0, 2)
 		print("input: ", input)
 		print()
