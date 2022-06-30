@@ -88,35 +88,25 @@ def stdev_error(output, target, unbiased=False):
 
     return torch.abs(target_std - output_std)
 
-def load_data(path, eval_frac=0.15):
-    aes_df = pd.read_csv("datasets/aes/data.csv")
-    sas_df = pd.read_csv("datasets/sas/data.csv")
-    fine_df = pd.read_csv("datasets/fine-tune/data.csv")
+def load_data(paths, eval_frac=0.15):
 
-    df = pd.concat([aes_df, sas_df], ignore_index=True)
+    dfs = [pd.read_csv(path) for path in paths]
+
+
+    df = pd.concat([dfs], ignore_index=True)
 
     df = df.sample(frac=1).reset_index(drop=True)
 
-    pre_train_df = df.iloc[int(df.shape[0]*eval_frac):]
-    pre_train_df.columns = ["text", "labels"]
+    train_df = df.iloc[int(df.shape[0]*eval_frac):]
+    train_df.columns = ["text", "labels"]
 
-    pre_eval_df = df.iloc[:int(df.shape[0]*eval_frac)]
-    pre_eval_df.columns = ["text", "labels"]
+    eval_df = df.iloc[:int(df.shape[0]*eval_frac)]
+    eval_df.columns = ["text", "labels"]
 
-    pre_train_df = pre_train_df.reset_index(drop=True)
-    pre_eval_df = pre_eval_df.reset_index(drop=True)
+    train_df = pre_train_df.reset_index(drop=True)
+    eval_df = pre_eval_df.reset_index(drop=True)
 
-    final_train_df = fine_df.iloc[int(fine_df.shape[0]*eval_frac):]
-    final_train_df.columns = ["text", "labels"]
-
-    final_eval_df = fine_df.iloc[:int(fine_df.shape[0]*eval_frac)]
-    final_eval_df.columns = ["text", "labels"]
-
-    final_train_df = final_train_df.reset_index(drop=True)
-    final_eval_df = final_eval_df.reset_index(drop=True)
-
-
-    return pre_train_df, pre_eval_df, final_train_df, final_eval_df
+    return train_df, eval_df
 
 def process_data(df, tokenizer):
     texts = df["text"]
@@ -251,16 +241,9 @@ def evaluate(model, eval_df, tokenizer, device, batch_size, log_wandb=True, is_t
     return output_df
 
 def train_model(args,technique=None):
-    pre_train_df, pre_eval_df, final_train_df, final_eval_df = load_data(f"datasets/{name}/data.csv")
-
     tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
 
-    process_data(pre_train_df, tokenizer)
-    process_data(final_train_df, tokenizer)
-    process_data(pre_eval_df, tokenizer)
-    process_data(final_eval_df, tokenizer)
-
-    print(len(tokenizer), tokenizer.vocab_size)
+    pre_train_df, pre_eval_df = load_data(["datasets/aes/data.csv", "datasets/sas/data.csv"], eval_frac=0.1)
 
     if args["path"]:
         model = torch.load(args["path"])
@@ -280,6 +263,11 @@ def train_model(args,technique=None):
 
     torch.save(model, f"models/model-{name}-pretrained.pt")
     wandb.save(f"models/model-{name}-pretrained.pt")
+
+    del pre_eval_df
+    del pre_train_df
+
+    final_train_df, final_eval_df = load_data(["datasets/fine-tune/data.csv"], eval_frac=0.2)
 
     model = train(model, wandb.config["final-epochs"], final_train_df, device, wandb.config["final-batch_size"], optimizer, tokenizer, eval_df=final_eval_df)
 
