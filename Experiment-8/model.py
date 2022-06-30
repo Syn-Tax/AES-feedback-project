@@ -71,6 +71,7 @@ class Model(nn.Module):
 
 		output, (h_n, c_n) = self.bilstm(input, (h_0, c_0))
 		output = output.permute(1, 0, 2)
+		print(output)
 
 		attn_weight_matrix = self.attention_net(output)
 		hidden_matrix = torch.bmm(attn_weight_matrix, output)
