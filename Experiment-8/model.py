@@ -25,7 +25,7 @@ class Model(nn.Module):
 
 		self.word_embeddings = nn.Embedding(self.vocab_size, self.embedding_length)
 		self.dropout = 0.8
-		self.bilstm = nn.LSTM(self.embedding_length, self.hidden_size, dropout=self.dropout, bidirectional=True)
+		self.bilstm = nn.LSTM(self.embedding_length, self.hidden_size, dropout=self.dropout, bidirectional=True, num_layers=2)
 		self.W_s1 = nn.Linear(2*hidden_size, 350)
 		self.W_s2 = nn.Linear(350, 30)
 
