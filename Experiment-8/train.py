@@ -254,8 +254,10 @@ def train_model(technique=None):
 
     tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
 
-    train_dataset = process_data(train_df, tokenizer)
-    eval_dataset = process_data(eval_df, tokenizer)
+    process_data(pre_train_df, tokenizer)
+    process_data(final_train_df, tokenizer)
+    process_data(pre_eval_df, tokenizer)
+    process_data(final_eval_df, tokenizer)
 
     model = Model(len(tokenizer), wandb.config["embedding_length"], wandb.config["hidden_size"])
     count_parameters(model)
