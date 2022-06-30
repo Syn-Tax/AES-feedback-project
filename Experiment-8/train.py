@@ -241,7 +241,7 @@ def evaluate(model, eval_df, tokenizer, device, batch_size, log_wandb=True, is_t
 def train_model(args,technique=None):
     tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
 
-    pre_train_df, pre_eval_df = load_data(["datasets/aes/data.csv", "datasets/sas/data.csv"], eval_frac=0.1)
+    pre_train_df, pre_eval_df = load_data(["../datasets/aes/data.csv", "../datasets/sas/data.csv"], eval_frac=0.1)
 
     if args["path"]:
         model = torch.load(args["path"])
@@ -265,7 +265,7 @@ def train_model(args,technique=None):
     del pre_eval_df
     del pre_train_df
 
-    final_train_df, final_eval_df = load_data(["datasets/fine-tune/data.csv"], eval_frac=0.2)
+    final_train_df, final_eval_df = load_data(["../datasets/Abstract/data.csv"], eval_frac=0.2)
 
     model = train(model, wandb.config["final-epochs"], final_train_df, device, wandb.config["final-batch_size"], optimizer, tokenizer, eval_df=final_eval_df)
 
