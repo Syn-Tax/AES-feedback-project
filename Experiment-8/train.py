@@ -227,6 +227,8 @@ def evaluate(model, eval_df, tokenizer, device, batch_size, log_wandb=True, is_t
     for batch in eval_dataloader:
         batch = {k: v.to(device) for k, v in batch.items()}
 
+        print(batch)
+
         with torch.no_grad():
             output = model(batch["input_ids"], len(batch["input_ids"]))
 
