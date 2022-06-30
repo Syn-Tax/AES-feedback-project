@@ -261,7 +261,7 @@ def train_model(args,technique=None):
     if args["path"]:
         model = torch.load(args["path"])
     else:
-        model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"])
+        model = Model(len(tokenizer), wandb.config["embedding_length"], wandb.config["hidden_size"])
 
     count_parameters(model)
 
