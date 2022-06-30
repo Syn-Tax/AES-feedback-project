@@ -258,6 +258,8 @@ def train_model(args,technique=None):
     process_data(pre_eval_df, tokenizer)
     process_data(final_eval_df, tokenizer)
 
+    print(len(tokenizer), tokenizer.vocab_size)
+
     if args["path"]:
         model = torch.load(args["path"])
     else:
