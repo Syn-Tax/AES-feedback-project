@@ -253,10 +253,10 @@ def train_model(args,technique=None):
 
     tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
 
-    # process_data(pre_train_df, tokenizer)
-    # process_data(final_train_df, tokenizer)
-    # process_data(pre_eval_df, tokenizer)
-    # process_data(final_eval_df, tokenizer)
+    process_data(pre_train_df, tokenizer)
+    process_data(final_train_df, tokenizer)
+    process_data(pre_eval_df, tokenizer)
+    process_data(final_eval_df, tokenizer)
 
     if args["path"]:
         model = torch.load(args["path"])
@@ -264,8 +264,6 @@ def train_model(args,technique=None):
         model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"])
 
     count_parameters(model)
-
-    #sys.exit(0)
 
     is_transformer = False
 
