@@ -1,0 +1,12 @@
+method: grid
+parameters:
+  final_epochs:
+    values: [5, 10, 20]
+  hidden_size:
+    values: [256, 512]
+  embedding_length:
+    values: [128, 256]
+  stdev_start_coeff:
+    values: [0.1, 0.2, 0.3]
+  stdev_coeff:
+    values: [0.5, 0.6, 0.7]
