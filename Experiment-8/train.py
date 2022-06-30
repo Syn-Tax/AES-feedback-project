@@ -253,10 +253,10 @@ def train_model(args,technique=None):
 
     tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
 
-    process_data(pre_train_df, tokenizer)
-    process_data(final_train_df, tokenizer)
-    process_data(pre_eval_df, tokenizer)
-    process_data(final_eval_df, tokenizer)
+    # process_data(pre_train_df, tokenizer)
+    # process_data(final_train_df, tokenizer)
+    # process_data(pre_eval_df, tokenizer)
+    # process_data(final_eval_df, tokenizer)
 
     if args["path"]:
         model = torch.load(args["path"])
@@ -277,9 +277,12 @@ def train_model(args,technique=None):
     model = train(model, wandb.config["pre-epochs"], pre_train_df, device, wandb.config["pre-batch_size"], optimizer, tokenizer, eval_df=pre_eval_df)
 
     torch.save(model, f"models/model-{name}-pretrained.pt")
+    wandb.save(f"models/model-{name}-pretrained.pt")
 
     model = train(model, wandb.config["final-epochs"], final_train_df, device, wandb.config["final-batch_size"], optimizer, tokenizer, eval_df=final_eval_df)
 
+    torch.save(model, f"models/model-{name}-final.pt")
+    wandb.save(f"models/model-{name}-final.pt")
 
     print("Final Evaluation")
 
