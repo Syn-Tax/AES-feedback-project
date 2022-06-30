@@ -15,7 +15,7 @@ import sys
 import argparse
 from model import Model
 
-name = "pre-train"
+name = "fine-tune"
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument("--batch-size", "-b", help="Training batch size", default=32, type=int)
@@ -86,10 +86,11 @@ def stdev_error(output, target, unbiased=False):
     return torch.abs(target_std - output_std)
 
 def load_data(path, eval_frac=0.1):
-    aes_df = pd.read_csv("datasets/aes/data.csv")
-    sas_df = pd.read_csv("datasets/sas/data.csv")
+    #aes_df = pd.read_csv("datasets/aes/data.csv")
+    #sas_df = pd.read_csv("datasets/sas/data.csv")
 
-    df = pd.concat([aes_df, sas_df], ignore_index=True)
+    #df = pd.concat([aes_df, sas_df], ignore_index=True)
+    df = pd.read_csv("datasets/fine-tune/data.csv")
 
     df = df.sample(frac=1).reset_index(drop=True)
 
