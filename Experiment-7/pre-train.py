@@ -84,7 +84,12 @@ def stdev_error(output, target, unbiased=False):
     target_std = torch.std(target, unbiased=unbiased)
     output_std = torch.std(output, unbiased=unbiased)
 
-    return torch.abs(target_std - output_std)
+    abs = torch.abs(target_std - output_std)
+    if target_std > output_std:
+        return abs * 2
+    else:
+        return abs
+
 
 def load_data(name, eval_frac=0.1):
     if name == "pre-train":
