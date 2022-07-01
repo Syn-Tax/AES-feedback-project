@@ -141,7 +141,7 @@ def compute_metrics(model_outputs, correct):
     }
 
 def calculate_loss(curr_frac, outputs, labels, start, start_coeff, stdev_coeff, r2_coeff):
-    rmse = rmse_loss(outputs, labels)
+    rmse = mse_loss(outputs, labels)
     stdev = stdev_error(outputs, labels)
     r2 = r2_loss(outputs, labels)
 
