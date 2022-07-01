@@ -261,7 +261,7 @@ def train_model(technique=None):
 
     print("Final Evaluation")
 
-    output_df = evaluate(model, eval_dataloader, device)
+    output_df = evaluate(model, eval_df, device)
 
     output_df.to_csv(f"results-aes-self_attention.csv", index=False)
 
