@@ -230,7 +230,8 @@ def evaluate(model, eval_df, tokenizer, device, batch_size, log_wandb=True, is_t
 
     metrics = compute_metrics(output_logits, output_labels)
     print(metrics)
-    wandb.log(metrics)
+    if log_wandb:
+        wandb.log(metrics)
 
     output_df = pd.DataFrame(list(zip(list(eval_df["text"]), output_logits, output_labels)))
     output_df.columns = ["text", "prediction", "true"]
@@ -269,6 +270,9 @@ def train_model(path, technique=None):
     output_df = evaluate(model, eval_df, tokenizer, device, 4)
 
     output_df.to_csv(f"results-aes-self_attention.csv", index=False)
+
+    output_train_df = evaluate(model, train_df, tokenizer, device, 4, log_wandb=False)
+    output_train_df.to_csv(f"results-train.csv", index=False)
 
 
 if __name__ == "__main__":
