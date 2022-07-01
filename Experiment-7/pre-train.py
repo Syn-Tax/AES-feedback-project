@@ -269,10 +269,13 @@ def train_model(path, technique=None):
 
     output_df = evaluate(model, eval_df, tokenizer, device, 4)
 
-    output_df.to_csv(f"results-aes-self_attention.csv", index=False)
+    output_df.to_csv(f"results-eval.csv", index=False)
 
     output_train_df = evaluate(model, train_df, tokenizer, device, 4, log_wandb=False)
     output_train_df.to_csv(f"results-train.csv", index=False)
+
+    wandb.save("results-eval.csv")
+    wandb.save("results-train.csv")
 
 
 if __name__ == "__main__":
