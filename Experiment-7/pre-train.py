@@ -88,12 +88,12 @@ def stdev_error(output, target, unbiased=False):
 
 def load_data(name, eval_frac=0.1):
     if name == "pre-train":
-        aes_df = pd.read_csv("datasets/aes/data.csv")
-        sas_df = pd.read_csv("datasets/sas/data.csv")
+        aes_df = pd.read_csv("../datasets/aes/data.csv")
+        sas_df = pd.read_csv("../datasets/sas/data.csv")
 
         df = pd.concat([aes_df, sas_df], ignore_index=True)
     else:
-        df = pd.read_csv(f"datasets/{name}/data.csv")
+        df = pd.read_csv(f"../datasets/{name}/data.csv")
 
     df = df.sample(frac=1).reset_index(drop=True)
 
