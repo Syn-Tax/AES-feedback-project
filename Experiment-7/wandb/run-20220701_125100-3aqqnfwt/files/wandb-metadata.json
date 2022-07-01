@@ -1,0 +1,35 @@
+{
+    "os": "Windows-10-10.0.19044-SP0",
+    "python": "3.10.4",
+    "heartbeatAt": "2022-07-01T11:51:02.466764",
+    "startedAt": "2022-07-01T11:51:00.319695",
+    "docker": null,
+    "gpu": "NVIDIA GeForce GTX 1660",
+    "gpu_count": 1,
+    "cpu_count": 4,
+    "cuda": null,
+    "args": [
+        "-b",
+        "32",
+        "-e",
+        "20",
+        "--stdev-coeff",
+        "0.9",
+        "--dataset",
+        "Abstract",
+        "--path",
+        "models\\model-Abstract"
+    ],
+    "state": "running",
+    "program": "C:\\Users\\twoca\\AES-feedback-project\\Experiment-7\\pre-train.py",
+    "codePath": "Experiment-7\\pre-train.py",
+    "git": {
+        "remote": "git@github.com:Syn-Tax/AES-feedback-project.git",
+        "commit": "b0bb16d4025721021dadd8f9b245f35cf231963c"
+    },
+    "email": "twocap06@gmail.com",
+    "root": "C:/Users/twoca/AES-feedback-project",
+    "host": "Oscar-Desktop",
+    "username": "twoca",
+    "executable": "D:\\anaconda\\envs\\pytorch\\python.exe"
+}
