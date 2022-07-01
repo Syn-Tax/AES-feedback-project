@@ -15,7 +15,7 @@ import sys
 import argparse
 from model import Model
 
-name = "fine-tune"
+name = "Abstract"
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument("--batch-size", "-b", help="Training batch size", default=32, type=int)
@@ -238,7 +238,7 @@ def train_model(technique=None):
     if technique:
         train_df, eval_df = load_data(f"datasets/{name}/data_{technique}.csv")
     else:
-        train_df, eval_df = load_data(f"datasets/{name}/data.csv")
+        train_df, eval_df = load_data(f"../datasets/{name}/data.csv")
 
     tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
 
@@ -261,9 +261,9 @@ def train_model(technique=None):
 
     print("Final Evaluation")
 
-    # output_df = evaluate(model, eval_dataloader, device)
+    output_df = evaluate(model, eval_dataloader, device)
 
-    # output_df.to_csv(f"results-aes-self_attention.csv", index=False)
+    output_df.to_csv(f"results-aes-self_attention.csv", index=False)
 
 
 if __name__ == "__main__":
