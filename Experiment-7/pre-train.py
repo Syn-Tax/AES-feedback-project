@@ -15,7 +15,6 @@ import sys
 import argparse
 from model import Model
 
-name = "Abstract"
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument("--batch-size", "-b", help="Training batch size", default=32, type=int)
@@ -27,6 +26,7 @@ argparser.add_argument("--stdev-coeff", help="stardard deviation coefficient", d
 argparser.add_argument("--stdev-start", help="standard deviation starting fraction", default=0.2, type=float)
 argparser.add_argument("--stdev-start-coeff", help="starting coefficient of standard deviation", default=1.0, type=float)
 argparser.add_argument("--r2-coeff", help="coefficient of r2", default=0.0007, type=float)
+argparser.add_argument("--dataset", help="training dataset", type=string)
 
 from prettytable import PrettyTable
 
@@ -256,7 +256,8 @@ def train_model(technique=None):
 
     model = train(model, wandb.config["epochs"], train_df, device, wandb.config["batch_size"], optimizer, tokenizer, eval_df=eval_df)
 
-    torch.save(model, f"models/model-{name}")
+    torch.save(model, f"models/model-{name}.pt")
+    wandb.save(f"models/model-{name}.pt")
 
 
     print("Final Evaluation")
@@ -268,6 +269,7 @@ def train_model(technique=None):
 
 if __name__ == "__main__":
     args = vars(argparser.parse_args())
+    name = args["dataset"]
     config = {
         "batch_size": args["batch_size"],
         "epochs": args["epochs"],
