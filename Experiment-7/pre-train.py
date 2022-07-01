@@ -26,7 +26,8 @@ argparser.add_argument("--stdev-coeff", help="stardard deviation coefficient", d
 argparser.add_argument("--stdev-start", help="standard deviation starting fraction", default=0.2, type=float)
 argparser.add_argument("--stdev-start-coeff", help="starting coefficient of standard deviation", default=1.0, type=float)
 argparser.add_argument("--r2-coeff", help="coefficient of r2", default=0.0007, type=float)
-argparser.add_argument("--dataset", help="training dataset", type=string)
+argparser.add_argument("--dataset", help="training dataset", type=str)
+argparser.add_argument("--path", help="model path", type=str)
 
 from prettytable import PrettyTable
 
@@ -85,12 +86,14 @@ def stdev_error(output, target, unbiased=False):
 
     return torch.abs(target_std - output_std)
 
-def load_data(path, eval_frac=0.1):
-    #aes_df = pd.read_csv("datasets/aes/data.csv")
-    #sas_df = pd.read_csv("datasets/sas/data.csv")
+def load_data(name, eval_frac=0.1):
+    if name == "pre-train":
+        aes_df = pd.read_csv("datasets/aes/data.csv")
+        sas_df = pd.read_csv("datasets/sas/data.csv")
 
-    #df = pd.concat([aes_df, sas_df], ignore_index=True)
-    df = pd.read_csv("datasets/fine-tune/data.csv")
+        df = pd.concat([aes_df, sas_df], ignore_index=True)
+    else:
+        df = pd.read_csv(f"datasets/{name}/data.csv")
 
     df = df.sample(frac=1).reset_index(drop=True)
 
@@ -234,15 +237,16 @@ def evaluate(model, eval_df, tokenizer, device, batch_size, log_wandb=True, is_t
 
     return output_df
 
-def train_model(technique=None):
-    if technique:
-        train_df, eval_df = load_data(f"datasets/{name}/data_{technique}.csv")
-    else:
-        train_df, eval_df = load_data(f"../datasets/{name}/data.csv")
+def train_model(path, technique=None):
+    train_df, eval_df = load_data(name)
 
     tokenizer = transformers.AutoTokenizer.from_pretrained("bert-base-uncased")
 
-    model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"])
+    if path:
+        model = torch.load(path)
+    else:
+        model = Model(tokenizer.vocab_size, wandb.config["embedding_length"], wandb.config["hidden_size"])
+
     count_parameters(model)
 
     #sys.exit(0)
@@ -285,5 +289,5 @@ if __name__ == "__main__":
 
     technique = "min_max"
     run = wandb.init(project="AES-Experiment-7", config=config)
-    train_model(technique=technique)
+    train_model(args["path"], technique=technique)
     run.finish()
