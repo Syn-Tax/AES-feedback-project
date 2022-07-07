@@ -6,6 +6,7 @@ import os
 import pandas as pd
 import spacy
 from tqdm import tqdm
+import json
 
 
 def detect_correct(df):
@@ -60,6 +61,9 @@ def mark(sample, correct_answers, nlp):
 if __name__ == "__main__":
     df = pd.read_csv("../datasets/Abstract-split/data.csv")
     correct_answers = detect_correct(df)
+
+    with open("../datasets/Abstract-split/correct.json", "w") as f:
+        f.write(json.dumps(correct_answers))
 
     nlp = spacy.load("en_core_web_lg")
 

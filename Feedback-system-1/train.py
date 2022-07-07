@@ -102,10 +102,6 @@ def load_data(name, eval_frac=0.1):
 
         df = pd.concat([df_raw["Abstract"], df_raw["Abstract mark"]], axis=1, keys=["text", "labels"])
 
-        print(df.loc[0]["text"])
-        sys.exit(0)
-
-
     df = df.sample(frac=1).reset_index(drop=True)
 
     train_df = df.iloc[int(df.shape[0]*eval_frac):]
@@ -129,7 +125,7 @@ def process_data(df, tokenizer):
     # encodings = [vocab(tokenizer(x)) for x in texts]
     #
 
-    encodings = tokenizer(list(texts), padding=True, truncation=True, max_length=512)
+    encodings = tokenizer(list([str(text) for text in texts]), padding=True, truncation=True, max_length=512)
 
     dataset = Dataset(encodings, labels)
 
@@ -306,6 +302,6 @@ if __name__ == "__main__":
     }
 
     technique = "min_max"
-    run = wandb.init(project="AES-Experiment-7", config=config)
+    run = wandb.init(project="Feedback-System-1", config=config)
     train_model(args["path"], technique=technique)
     run.finish()
