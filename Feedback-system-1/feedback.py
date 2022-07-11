@@ -27,11 +27,11 @@ def main(model, nlp, path):
     for key in Counter(predictions).keys():
         percs[labels[key]] = dict(Counter(predictions))[key]/len(predictions)
 
-    if "BACKGROUND" not in percs.keys:
+    if "BACKGROUND" not in percs.keys():
         percs["BACKGROUND"] = 0
-    if "TECHNIQUE" not in percs.keys:
+    if "TECHNIQUE" not in percs.keys():
         percs["TECHNIQUE"] = 0
-    if "RESULT" not in percs.keys:
+    if "RESULT" not in percs.keys():
         percs["RESULT"] = 0
 
     print(percs)
