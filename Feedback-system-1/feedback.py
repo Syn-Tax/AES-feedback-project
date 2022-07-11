@@ -56,6 +56,7 @@ if __name__ == "__main__":
         for f in files:
             try:
                 percs.append(main(model, nlp, f))
+                break
             except: continue
 
         print(f"BACKGROUND: {sum([perc['BACKGROUND'] for perc in percs])/len(files)}")
