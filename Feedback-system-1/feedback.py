@@ -43,7 +43,7 @@ if __name__ == "__main__":
         files = []
         for f in os.listdir(sys.argv[1]):
             if f.endswith(".pdf"):
-                files.append(os.path.join(sys.argv[1], f)
+                files.append(os.path.join(sys.argv[1], f))
 
         for f in files:
             main(model, nlp, f)
