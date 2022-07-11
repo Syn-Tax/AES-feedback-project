@@ -81,5 +81,4 @@ def process_pdf(path):
     if data["DOI"].startswith("0"):
         data["DOI"] = "1"+data["DOI"]
 
-    print(data)
     return data

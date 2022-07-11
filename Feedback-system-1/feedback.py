@@ -18,15 +18,10 @@ def main(model, nlp, path):
 
     tokens = nlp(sample["Abstract"])
     sentences = [sent.text.strip() for sent in tokens.sents]
-    print()
-    print()
-    print(sentences)
 
     predictions, raw_outputs = model.predict(sentences)
 
-    print(predictions)
     labels = ["BACKGROUND", "TECHNIQUE", "RESULT"]
-    print([{sentences[i]: labels[predictions[i]]} for i in range(len(predictions))])
 
     percs = {}
     for key in Counter(predictions).keys():
