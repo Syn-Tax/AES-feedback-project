@@ -7,6 +7,7 @@ import sys
 from simpletransformers.classification import ClassificationModel
 from process_pdf import process_pdf
 import spacy
+import json
 
 
 def main():
