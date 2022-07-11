@@ -13,6 +13,9 @@ from collections import Counter
 def main(model, nlp, path):
     sample = process_pdf(path)
 
+    if not sample["Abstract"]:
+        raise ValueError()
+
     tokens = nlp(sample["Abstract"])
     sentences = [sent.text.strip() for sent in tokens.sents]
     print()
@@ -46,4 +49,6 @@ if __name__ == "__main__":
                 files.append(os.path.join(sys.argv[1], f))
 
         for f in files:
-            main(model, nlp, f)
+            try:
+                main(model, nlp, f)
+            except: continue
