@@ -21,7 +21,7 @@ def main():
 
     tokens = nlp(sample["Abstract"])
 
-    sentences = [sent.string.strip() for sent in tokens.sents]
+    sentences = [sent.text.strip() for sent in tokens.sents]
     print(sentences)
     sys.exit(0)
 
