@@ -22,12 +22,15 @@ def main():
     tokens = nlp(sample["Abstract"])
 
     sentences = [sent.text.strip() for sent in tokens.sents]
+    print()
+    print()
     print(sentences)
 
     predictions, raw_outputs = model.predict(sentences)
 
     print(predictions)
-    print(raw_outputs)
+    labels = ["BACKGROUND", "TECHNIQUE", "RESULT"]
+    print([{sentences[i]: labels[predictions[i]]} for i in range(len(predictions))])
 
 if __name__ == "__main__":
     main()
