@@ -57,7 +57,7 @@ if __name__ == "__main__":
             try:
                 percs.append(main(model, nlp, f))
             except KeyboardInterrupt:
-                sys.exit(0)
+                break
             except: continue
 
         print(f"BACKGROUND: {sum([perc['BACKGROUND'] for perc in percs])/len(files)}")
