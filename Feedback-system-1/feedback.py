@@ -61,7 +61,8 @@ if __name__ == "__main__":
                 break
             except: continue
 
-        print(f"BACKGROUND: {sum([perc['BACKGROUND'] for perc in percs])/len(files)}")
-        print(f"TECHNIQUE: {sum([perc['TECHNIQUE'] for perc in percs])/len(files)}")
-        print(f"RESULT: {sum([perc['RESULT'] for perc in percs])/len(files)}")
+        print(f"BACKGROUND: {sum([perc['BACKGROUND'] for perc in percs])/len(percs)}")
+        print(f"TECHNIQUE: {sum([perc['TECHNIQUE'] for perc in percs])/len(percs)}")
+        print(f"RESULT: {sum([perc['RESULT'] for perc in percs])/len(percs)}")
         print(f"COUNT 2: {sum([1 if 0 in perc.values() else 0 for perc in percs])}")
+        print(f"PERC 2: {sum([1 if 0 in perc.values() else 0 for perc in percs])/len(percs)}")
