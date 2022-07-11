@@ -24,7 +24,7 @@ def main():
     sentences = [sent.text.strip() for sent in tokens.sents]
     print(sentences)
 
-    predictions, raw_outputs = model.predict([sentences])
+    predictions, raw_outputs = model.predict(sentences)
 
     print(predictions)
     print(raw_outputs)
