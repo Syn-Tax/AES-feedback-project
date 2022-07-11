@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     nlp = spacy.load("en_core_web_lg")
 
-    if not os.isdir(sys.argv[1]):
+    if not os.path.isdir(sys.argv[1]):
         main(model, nlp, sys.argv[1])
     else:
         files = []
