@@ -10,8 +10,7 @@ import spacy
 from collections import Counter
 
 
-def main(model, nlp):
-    path = sys.argv[1]
+def main(model, nlp, path):
     sample = process_pdf(path)
 
     tokens = nlp(sample["Abstract"])
@@ -38,4 +37,13 @@ if __name__ == "__main__":
 
     nlp = spacy.load("en_core_web_lg")
 
-    main(model, nlp)
+    if not os.isdir(sys.argv[1]):
+        main(model, nlp, sys.argv[1])
+    else:
+        files = []
+        for f in os.listdir(sys.argv[1]):
+            if f.endswith(".pdf"):
+                files.append(f)
+
+        for f in files:
+            main(model, nlp, f)

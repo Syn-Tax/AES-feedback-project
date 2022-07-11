@@ -42,8 +42,21 @@ def mark_info(doi, impact, cited, rsc, acs):
 
 if __name__ == "__main__":
     model = torch.load("models/model-Abstract-mark.pt")
-    sample = process_pdf(sys.argv[1])
+    if not os.isdir(sys.argv[1]):
+        sample = process_pdf(sys.argv[1])
 
-    abstract_mark = mark_abstract(sample["Abstract"], model)
-    info_mark = mark_info(sample["DOI"], sample["Impact Factor"], sample["cited"], sample["RSC"], sample["ACS"])
-    print(info_mark+abstract_mark)
+        abstract_mark = mark_abstract(sample["Abstract"], model)
+        info_mark = mark_info(sample["DOI"], sample["Impact Factor"], sample["cited"], sample["RSC"], sample["ACS"])
+        print(info_mark+abstract_mark)
+    else:
+        files = []
+        for f in os.listdir(sys.argv[1]):
+            if f.endswith(".pdf"):
+                files.append(f)
+
+        for f in files:
+            sample = process_pdf(f)
+
+            abstract_mark = mark_abstract(sample["Abstract"], model)
+            info_mark = mark_info(sample["DOI"], sample["Impact Factor"], sample["cited"], sample["RSC"], sample["ACS"])
+            print(info_mark+abstract_mark)
