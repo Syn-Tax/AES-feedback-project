@@ -3,6 +3,7 @@
 import pdfplumber
 import re
 import requests
+import json
 
 def processing_error():
     raise ValueError("Unable to process pdf, Processing must be done manually")
