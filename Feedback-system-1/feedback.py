@@ -32,7 +32,15 @@ def main(model, nlp, path):
     for key in Counter(predictions).keys():
         percs[labels[key]] = dict(Counter(predictions))[key]/len(predictions)
 
+    if "BACKGROUND" not in percs.keys:
+        percs["BACKGROUND"] = 0
+    if "TECHNIQUE" not in percs.keys:
+        percs["TECHNIQUE"] = 0
+    if "RESULT" not in percs.keys:
+        percs["RESULT"] = 0
+
     print(percs)
+    return percs
 
 if __name__ == "__main__":
     model_path = "outputs/best_model"
@@ -48,7 +56,13 @@ if __name__ == "__main__":
             if f.endswith(".pdf"):
                 files.append(os.path.join(sys.argv[1], f))
 
+        percs = []
+
         for f in files:
             try:
-                main(model, nlp, f)
+                percs.append(main(model, nlp, f))
             except: continue
+
+        print(f"BACKGROUND: {sum([perc['BACKGROUND'] for perc in percs])/len(files)}")
+        print(f"TECHNIQUE: {sum([perc['TECHNIQUE'] for perc in percs])/len(files)}")
+        print(f"RESULT: {sum([perc['RESULT'] for perc in percs])/len(files)}")
