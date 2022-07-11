@@ -4,7 +4,7 @@ import os
 import pdfplumber
 import mark
 import sys
-from simpletransformers import ClassificationModel
+from simpletransformers.classification import ClassificationModel
 from process_pdf import process_pdf
 import spacy
 
