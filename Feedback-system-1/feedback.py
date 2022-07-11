@@ -13,7 +13,7 @@ def main():
     path = sys.argv[1]
     model_path = "outputs/best_model"
 
-    nlp = spacy.load("en")
+    nlp = spacy.load("en_core_web_lg")
 
     model = ClassificationModel("bert", model_path)
 
