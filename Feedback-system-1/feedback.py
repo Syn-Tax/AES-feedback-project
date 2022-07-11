@@ -56,6 +56,7 @@ if __name__ == "__main__":
         for f in files:
             try:
                 percs.append(main(model, nlp, f))
+                sys.exit(0)
             except KeyboardInterrupt:
                 break
             except: continue
@@ -63,3 +64,4 @@ if __name__ == "__main__":
         print(f"BACKGROUND: {sum([perc['BACKGROUND'] for perc in percs])/len(files)}")
         print(f"TECHNIQUE: {sum([perc['TECHNIQUE'] for perc in percs])/len(files)}")
         print(f"RESULT: {sum([perc['RESULT'] for perc in percs])/len(files)}")
+        print(f"COUNT 2: {sum([1 if 0 in perc.values() else 0 for perc in percs])}")
