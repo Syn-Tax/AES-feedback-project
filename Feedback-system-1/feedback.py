@@ -23,9 +23,11 @@ def main():
 
     sentences = [sent.text.strip() for sent in tokens.sents]
     print(sentences)
-    sys.exit(0)
 
-    predictions, raw_outputs = model.predict([sample["Abstract"]])
+    predictions, raw_outputs = model.predict([sentences])
+
+    print(predictions)
+    print(raw_outputs)
 
 if __name__ == "__main__":
     main()
