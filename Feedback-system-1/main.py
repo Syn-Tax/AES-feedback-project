@@ -19,6 +19,8 @@ def main(path):
     abstract_mark = mark_full.mark_abstract(sample, model_mark)
     info_mark, correct_answers = mark_full.mark_info(sample, nlp)
 
+    print(info_mark, correct_answers)
+
     percs = feedback.main(model_feedback, nlp, sample)
 
     for k, v in info_mark.items():
