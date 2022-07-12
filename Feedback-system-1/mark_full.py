@@ -30,7 +30,7 @@ def mark_info(sample, nlp):
     with open("../datasets/Abstract-split/correct.json", "r") as f:
         correct_answers = json.loads(f.read())
 
-    return mark.mark(sample, correct_answers, nlp), correct_answers
+    return mark.mark(sample, correct_answers, nlp), correct_answers[sample["DOI"]]
 
 if __name__ == "__main__":
     model = torch.load("models/model-Abstract-mark.pt")
