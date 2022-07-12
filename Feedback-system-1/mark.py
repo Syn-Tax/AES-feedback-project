@@ -56,7 +56,7 @@ def mark(sample, correct_answers, nlp):
     rsc = mark_text(sample["RSC"], correct["RSC"], nlp)
     acs = mark_text(sample["ACS"], correct["ACS"], nlp)
 
-    return impact_factor + cited + rsc + acs
+    return {"Impact Factcor": impact_factor, "cited": cited, "RSC": rsc, "ACS": acs}
 
 if __name__ == "__main__":
     df = pd.read_csv("../datasets/Abstract-split/data.csv")

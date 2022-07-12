@@ -26,19 +26,11 @@ def mark_abstract(sample, model):
 
     return int(output[0]*6)
 
-def mark_info(doi, impact, cited, rsc, acs):
+def mark_info(sample, nlp):
     with open("../datasets/Abstract-split/correct.json", "r") as f:
         correct_answers = json.loads(f.read())
 
-    nlp = spacy.load("en_core_web_lg")
-
-    return mark.mark({
-        "DOI": doi,
-        "Impact Factor": impact,
-        "cited": cited,
-        "RSC": rsc,
-        "ACS": acs
-    }, correct_answers, nlp)
+    return mark.mark(sample, correct_answers, nlp), correct_answers
 
 if __name__ == "__main__":
     model = torch.load("models/model-Abstract-mark.pt")

@@ -10,8 +10,7 @@ import spacy
 from collections import Counter
 
 
-def main(model, nlp, path):
-    sample = process_pdf(path)
+def main(model, nlp, sample):
 
     if not sample["Abstract"]:
         raise ValueError()
@@ -34,7 +33,6 @@ def main(model, nlp, path):
     if "RESULT" not in percs.keys():
         percs["RESULT"] = 0
 
-    print(percs)
     return percs
 
 if __name__ == "__main__":
@@ -55,7 +53,8 @@ if __name__ == "__main__":
 
         for f in files:
             try:
-                percs.append(main(model, nlp, f))
+                sample = process_pdf(f)
+                percs.append(main(model, nlp, sample))
                 sys.exit(0)
             except KeyboardInterrupt:
                 break
