@@ -1,0 +1,92 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.12.20
+    code_path: code/Experiment-5/pre-train-aes.py
+    framework: huggingface
+    huggingface_version: 4.18.0
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    m:
+    - 1: eval_qwk
+      6:
+      - 3
+      7:
+      - 2
+    - 1: eval_kappa
+      6:
+      - 3
+      7:
+      - 2
+    - 1: eval_r2
+      6:
+      - 3
+      7:
+      - 2
+    - 1: eval_mae
+      6:
+      - 3
+      7:
+      - 1
+    python_version: 3.10.4
+    start_time: 1660665140
+    t:
+      1:
+      - 1
+      - 5
+      - 11
+      - 40
+      - 49
+      - 53
+      - 55
+      2:
+      - 1
+      - 5
+      - 11
+      - 40
+      - 49
+      - 53
+      - 55
+      3:
+      - 2
+      - 7
+      - 13
+      - 16
+      4: 3.10.4
+      5: 0.12.20
+      6: 4.18.0
+      8:
+      - 3
+      - 5
+batch_size:
+  desc: null
+  value: 64
+embedding_length:
+  desc: null
+  value: 256
+epochs:
+  desc: null
+  value: 100
+hidden_size:
+  desc: null
+  value: 512
+lr:
+  desc: null
+  value: 0.0001
+name:
+  desc: null
+  value: aes
+r2_coeff:
+  desc: null
+  value: 0.0007
+stdev_coeff:
+  desc: null
+  value: 1
+stdev_start:
+  desc: null
+  value: 0.2
+stdev_start_coeff:
+  desc: null
+  value: 1

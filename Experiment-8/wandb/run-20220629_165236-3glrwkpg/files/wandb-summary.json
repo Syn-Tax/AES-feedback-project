@@ -1,1 +1,0 @@
-{"train_loss": NaN, "train_stdev": 0.0, "train_rmse": 0.02888697385787964, "train_r2": Infinity, "stdev_factor": 1.0, "_timestamp": 1656517977, "_runtime": 21, "_step": 21, "_wandb": {"runtime": 19}}

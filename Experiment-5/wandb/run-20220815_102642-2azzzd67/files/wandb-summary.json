@@ -1,0 +1,1 @@
+{"train_loss": 4.8354268074035645e-05, "train_stdev": 4.8354268074035645e-05, "train_rmse": 0.16263408958911896, "train_r2": 127.99850463867188, "stdev_factor": 1, "_timestamp": 1660555654, "_runtime": 52, "_step": 24, "_wandb": {"runtime": 62}}
